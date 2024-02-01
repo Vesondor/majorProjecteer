@@ -1,8 +1,8 @@
 ---
 # Banner
 banner:
-  title: "The Ultimate Tool For Translation Management"
-  content: "BorkPrae is a translation management system (TSM) aimed at the field of Translation with a new solution of Machine learning (OCR) and machine translation. The application is marketing toward agencies that are dealing with traditional file management and is also having a problem kick-starting the translation process."
+  title: "Unlock Effortless Translation Management with BorkPrae"
+  content: "BorkPrae is a translation management system (TMS) that revolutionizes the translation process with the power of machine learning (OCR) and machine translation. Targeted towards agencies dealing with traditional file management, BorkPrae streamlines and accelerates the translation workflow."
   image: "/images/banner.png"
   button:
     enable: true
@@ -11,41 +11,41 @@ banner:
 
 # Features
 features:
-  - title: "What's Included in Nextplate"
+  - title: "Key Highlights of BorkPrae"
     image: "/images/service-1.png"
-    content: "Nextplate is a comprehensive starter template that includes everything you need to get started with your Next project. What's Included in Nextplate"
+    content: "Discover how BorkPrae simplifies translation management:"
     bulletpoints:
-      - "10+ Pre-build pages"
-      - "95+ Google Pagespeed Score"
-      - "Build with Next and TailwindCSS for easy and customizable styling"
-      - "Fully responsive on all devices"
-      - "SEO-optimized for better search engine rankings"
-      - "**Open-source and free** for personal and commercial use"
+      - "Harness the potential of advanced OCR and machine translation"
+      - "Streamline your translation workflow with efficient file management"
+      - "Customize BorkPrae to suit your translation needs"
+      - "Ensure a responsive design for all devices"
+      - "Boost your online visibility with SEO optimization"
+      - "Enjoy the benefits of an open-source and free solution"
     button:
       enable: true
       label: "Get Started Now"
       link: "http://localhost:3000/login"
 
-  - title: "Discover the Key Features Of Next"
+  - title: "Explore BorkPrae's Comprehensive Features"
     image: "/images/service-2.png"
-    content: "Next is an all-in-one web framework for building fast, content-focused websites. It offers a range of exciting features for developers and website creators. Some of the key features are:"
+    content: "BorkPrae offers a range of features designed for translation management success:"
     bulletpoints:
-      - "Zero JS, by default: No JavaScript runtime overhead to slow you down."
-      - "Customizable: Tailwind, MDX, and 100+ other integrations to choose from."
-      - "UI-agnostic: Supports React, Preact, Svelte, Vue, Solid, Lit and more."
+      - "Experience efficient translation with minimal JavaScript overhead"
+      - "Tailor BorkPrae to your specific translation project requirements"
+      - "Seamlessly integrate with various front-end libraries and frameworks"
     button:
       enable: true
       label: "Get Started"
       link: "http://localhost:3000/login"
 
-  - title: "The Top Reasons to Choose Next for Your Next Project"
+  - title: "Why Choose BorkPrae for Your Translation Needs"
     image: "/images/service-3.png"
-    content: "With Next, you can build modern and content-focused websites without sacrificing performance or ease of use."
+    content: "BorkPrae empowers your translation projects with the following advantages:"
     bulletpoints:
-      - "Instantly load static sites for better user experience and SEO."
-      - "Intuitive syntax and support for popular frameworks make learning and using Next a breeze."
-      - "Use any front-end library or framework, or build custom components, for any project size."
-      - "Built on cutting-edge technology to keep your projects up-to-date with the latest web standards."
+      - "Instantly load static sites for superior user experience and SEO benefits"
+      - "Effortlessly work with popular frameworks using intuitive syntax"
+      - "Enjoy flexibility with the ability to choose front-end libraries"
+      - "Stay at the forefront of industry standards with cutting-edge technology"
     button:
       enable: false
       label: ""

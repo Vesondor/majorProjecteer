@@ -1,6 +1,6 @@
 ---
-title: John Doe
-email: johndoe@email.com
+title: San Raksmey
+email: gakoraj@gmail.com
 image: "/images/avatar.png"
 description: this is meta description
 social:

@@ -32,31 +32,31 @@ const Contact = async () => {
                     id="name"
                     name="name"
                     className="form-input"
-                    placeholder="John Doe"
+                    placeholder="Name"
                     type="text"
                   />
                 </div>
                 <div className="mb-6">
                   <label htmlFor="email" className="form-label">
-                    Working Mail <span className="text-red-500">*</span>
+                    Email <span className="text-red-500">*</span>
                   </label>
                   <input
                     id="email"
                     name="email"
                     className="form-input"
-                    placeholder="john.doe@email.com"
+                    placeholder="example@email.com"
                     type="email"
                   />
                 </div>
                 <div className="mb-6">
                   <label htmlFor="message" className="form-label">
-                    Anything else? <span className="text-red-500">*</span>
+                    Message <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     id="message"
                     name="message"
                     className="form-input"
-                    placeholder="Message goes here..."
+                    placeholder="Inquire more information"
                     rows={8}
                   ></textarea>
                 </div>

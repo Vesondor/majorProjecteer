@@ -5,11 +5,11 @@
       "url": "/"
     },
     {
-      "name": "Authors",
+      "name": "Developers",
       "url": "/authors"
     },
     {
-      "name": "About",
+      "name": "FAQs",
       "url": "/about"
     },
     {
@@ -19,8 +19,8 @@
   ],
   "footer": [
     {
-      "name": "Elements",
-      "url": "/elements"
+      "name": "FAQs",
+      "url": "/about"
     },
     {
       "name": "Privacy Policy",

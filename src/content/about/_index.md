@@ -1,9 +1,38 @@
 ---
-title: "Hey, I am John Doe!"
-meta_title: "About"
-description: "this is meta description"
-image: "/images/avatar.png"
+title: "Frequently Asked Questions"
+meta_title: ""
+description: "This is meta description"
 draft: false
 ---
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis illum nesciunt commodi vel nisi ut alias excepturi ipsum, totam, labore tempora, odit ex iste tempore sed. Fugit voluptatibus perspiciatis assumenda nulla ad nihil, omnis vel, doloremque sit quam autem optio maiores, illum eius facilis et quo consectetur provident dolor similique! Enim voluptatem dicta expedita veritatis repellat dolorum impedit, provident quasi at.
+<Accordion title="Why should you need Translation Management Software?">
+
+- Streamlines translation workflows.
+- Enhances translation quality and consistency.
+- Supports collaboration among translation teams.
+- Manages multilingual content efficiently.
+- Increases translation project efficiency.
+
+</Accordion>
+
+<Accordion title="How can I optimize translation processes with Translation Management Software?">
+
+- Automates translation tasks.
+- Provides real-time translation project tracking.
+- Offers translation memory and glossary management.
+- Facilitates translator-client collaboration.
+- Ensures compliance with industry standards.
+
+</Accordion>
+
+<Accordion title="Should you invest in Translation Management Software?">
+
+- Depends on your translation needs.
+- Consider the volume and complexity of your content.
+- Evaluate the benefits of automation and efficiency.
+- Determine your budget and ROI expectations.
+- Seek recommendations from industry peers.
+
+</Accordion>
+
+---
