@@ -1,13 +1,13 @@
 ---
 # Banner
 banner:
-  title: "The Ultimate Starter Template You Need To Start Your Next Project"
-  content: "Nextplate is a free starter template built with Next and TailwindCSS, providing everything you need to jumpstart your Next project and save valuable time."
+  title: "The Ultimate Tool For Translation Management"
+  content: "BorkPrae is a translation management system (TSM) aimed at the field of Translation with a new solution of Machine learning (OCR) and machine translation. The application is marketing toward agencies that are dealing with traditional file management and is also having a problem kick-starting the translation process."
   image: "/images/banner.png"
   button:
     enable: true
-    label: "Get Started For Free"
-    link: "https://github.com/zeon-studio/nextplate"
+    label: "Get Started Now"
+    link: "http://localhost:3000/login"
 
 # Features
 features:
@@ -22,9 +22,9 @@ features:
       - "SEO-optimized for better search engine rankings"
       - "**Open-source and free** for personal and commercial use"
     button:
-      enable: false
+      enable: true
       label: "Get Started Now"
-      link: "#"
+      link: "http://localhost:3000/login"
 
   - title: "Discover the Key Features Of Next"
     image: "/images/service-2.png"
@@ -35,8 +35,8 @@ features:
       - "UI-agnostic: Supports React, Preact, Svelte, Vue, Solid, Lit and more."
     button:
       enable: true
-      label: "Get Started Now"
-      link: "https://github.com/zeon-studio/nextplate"
+      label: "Get Started"
+      link: "http://localhost:3000/login"
 
   - title: "The Top Reasons to Choose Next for Your Next Project"
     image: "/images/service-3.png"

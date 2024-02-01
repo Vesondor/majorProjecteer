@@ -1,10 +1,10 @@
 ---
 enable: true
-title: "Ready to build your next project with Next?"
+title: "Ready to manage your agency with BorkPrae?"
 image: "/images/call-to-action.png"
-description: "Experience the future of web development with Nextplate and Next. Build lightning-fast static sites with ease and flexibility."
+description: "Experience the future of Machine Translation with BorkPrae."
 button:
   enable: true
   label: "Get Started Now"
-  link: "https://github.com/zeon-studio/nextplate"
+  link: "http://localhost:3000/login"
 ---
