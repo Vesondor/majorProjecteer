@@ -15,7 +15,6 @@
     "generate-json": "node scripts/jsonGenerator.js",
     "remove-darkmode": "node scripts/removeDarkmode.js && npm run format"
   },
-  
   "engines": {
     "node": ">=18.0.0"
   },
@@ -34,6 +33,7 @@
     "react-gtm-module": "^2.0.11",
     "react-icons": "^4.12.0",
     "react-lite-youtube-embed": "^2.4.0",
+    "react-router-dom": "^6.21.3",
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^3.0.1",
     "sharp": "^0.33.1",
