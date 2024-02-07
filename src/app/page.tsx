@@ -2,6 +2,8 @@ import ImageFallback from "@/helpers/ImageFallback";
 import { getListPage } from "@/lib/contentParser";
 import { markdownify } from "@/lib/utils/textConverter";
 import CallToAction from "@/partials/CallToAction";
+import Footer from "@/partials/Footer";
+import Header from "@/partials/Header";
 import SeoMeta from "@/partials/SeoMeta";
 import Testimonials from "@/partials/Testimonials";
 import { Button, Feature } from "@/types";
@@ -23,6 +25,7 @@ const Home = () => {
 
   return (
     <>
+      <Header />
       <SeoMeta />
       <section className="section pt-14">
         <div className="container">
@@ -66,9 +69,8 @@ const Home = () => {
           <div className="container">
             <div className="row items-center justify-between">
               <div
-                className={`mb:md-0 mb-6 md:col-5 ${
-                  index % 2 !== 0 && "md:order-2"
-                }`}
+                className={`mb:md-0 mb-6 md:col-5 ${index % 2 !== 0 && "md:order-2"
+                  }`}
               >
                 <ImageFallback
                   src={feature.image}
@@ -78,9 +80,8 @@ const Home = () => {
                 />
               </div>
               <div
-                className={`md:col-7 lg:col-6 ${
-                  index % 2 !== 0 && "md:order-1"
-                }`}
+                className={`md:col-7 lg:col-6 ${index % 2 !== 0 && "md:order-1"
+                  }`}
               >
                 <h2
                   className="mb-4"
@@ -114,6 +115,7 @@ const Home = () => {
 
       <Testimonials data={testimonial} />
       <CallToAction data={callToAction} />
+      <Footer />
     </>
   );
 };

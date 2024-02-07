@@ -1,5 +1,7 @@
 import config from "@/config/config.json";
 import { getListPage } from "@/lib/contentParser";
+import Footer from "@/partials/Footer";
+import Header from "@/partials/Header";
 import PageHeader from "@/partials/PageHeader";
 import SeoMeta from "@/partials/SeoMeta";
 import { RegularPage } from "@/types";
@@ -12,6 +14,7 @@ const Contact = async () => {
 
   return (
     <>
+      <Header/>
       <SeoMeta
         title={title}
         meta_title={meta_title}
@@ -68,6 +71,7 @@ const Contact = async () => {
           </div>
         </div>
       </section>
+      <Footer />
     </>
   );
 };

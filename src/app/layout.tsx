@@ -1,3 +1,4 @@
+import React from 'react';
 import SearchModal from "@/components/SearchModal";
 import config from "@/config/config.json";
 import theme from "@/config/theme.json";
@@ -9,8 +10,10 @@ import "@/styles/main.scss";
 
 export default function RootLayout({
   children,
+  hideHeaderAndFooter = false, // Add a new prop to control the visibility
 }: {
   children: React.ReactNode;
+  hideHeaderAndFooter?: boolean; // Make it optional with a default value
 }) {
   // import google font css
   const pf = theme.fonts.font_family.primary;
@@ -48,19 +51,15 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href={`https://fonts.googleapis.com/css2?family=${pf}${
-            sf ? "&family=" + sf : ""
-          }&display=swap`}
+          href={`https://fonts.googleapis.com/css2?family=${pf}${sf ? "&family=" + sf : ""}&display=swap`}
           rel="stylesheet"
         />
       </head>
 
       <body suppressHydrationWarning={true}>
         <Providers>
-          <Header />
           <SearchModal />
           <main>{children}</main>
-          <Footer />
         </Providers>
       </body>
     </html>

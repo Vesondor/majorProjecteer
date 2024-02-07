@@ -2,6 +2,8 @@ import ImageFallback from "@/helpers/ImageFallback";
 import MDXContent from "@/helpers/MDXContent";
 import { getListPage } from "@/lib/contentParser";
 import { markdownify } from "@/lib/utils/textConverter";
+import Footer from "@/partials/Footer";
+import Header from "@/partials/Header";
 import SeoMeta from "@/partials/SeoMeta";
 import { RegularPage } from "@/types";
 
@@ -12,6 +14,7 @@ const About = () => {
 
   return (
     <>
+      <Header />
       <SeoMeta
         title={title}
         meta_title={meta_title}
@@ -42,6 +45,7 @@ const About = () => {
           </div>
         </div>
       </section>
+      <Footer />
     </>
   );
 };
