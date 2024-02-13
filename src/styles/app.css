@@ -1,0 +1,25 @@
+/* Remove borders from ReactQuill */
+.react-quill .ql-toolbar,
+.react-quill .ql-container {
+  border: none !important; /* Use !important to override default styles */
+}
+.text-editor-container {
+    display: flex;
+    height: 700px; /* Set the height to match the previous code */
+  }
+  
+  .text-container,
+  .editor-container {
+    flex: 1;
+    overflow: auto;
+  }
+  
+  .text-content {
+    padding: 20px;
+    border-right: 1px solid #ccc; /* Add a border to separate the two sections */
+  }
+  
+  .react-quill {
+    padding: 20px;
+  }
+  
