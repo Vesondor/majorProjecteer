@@ -3,7 +3,7 @@ import { FaInfoCircle, FaLock, FaQuestionCircle } from 'react-icons/fa';
 
 const SettingsContent: React.FC = () => {
   return (
-    <div className="w-full py-8">
+    <div className="w-full min-h-[700px] mx-auto py-4">
       <h1 className="text-3xl font-semibold text-center mb-10">Settings</h1>
       
       <div className="flex flex-col items-start justify-center space-y-4 max-w-md mx-auto">

@@ -4,11 +4,11 @@
     "base_url": "http://localhost:3000",
     "base_path": "/",
     "trailing_slash": false,
-    "favicon": "/images/logo.jpg",
-    "logo": "/images/logo.jpg",
+    "favicon": "/images/logo.png",
+    "logo": "/images/logo.png",
     "logo_darkmode": "/images/logo-darkmode.png",
-    "logo_width": "80",
-    "logo_height": "50",
+    "logo_width": "60",
+    "logo_height": "60",
     "logo_text": "BorkPrae"
   },
 
