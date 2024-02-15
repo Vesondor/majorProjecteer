@@ -38,7 +38,7 @@ const InboxContent: React.FC = () => {
         </>
       ) : (
         <Card
-          title="Task Inbox"
+          title="Task List"
           extra={
             <Space>
               <Button
@@ -75,13 +75,26 @@ const InboxContent: React.FC = () => {
                       onChange={() => handleTaskCheck(item)}
                     />
                   }
-                  title={<a onClick={() => handleTaskSelect(item)}>{item.name}</a>}
-                  description={item.category}
+                  title={
+                    <span>
+                      {/* Add icon before task name */}
+                      {item.completed ? <CheckCircleTwoTone twoToneColor="#52c41a" style={{ marginRight: 5 }} /> : <ClockCircleTwoTone style={{ marginRight: 5 }} />}
+                      <a onClick={() => handleTaskSelect(item)}>{item.name}</a>
+                    </span>
+                  }
+                  description={
+                    <span>
+                      {/* Add icon before task details */}
+                      <EditTwoTone style={{ marginRight: 5 }} />
+                      {item.category}
+                    </span>
+                  }
                 />
                 {item.completed ? <Tag color="success">Completed</Tag> : <Tag color="processing">In Progress</Tag>}
               </List.Item>
             )}
           />
+
         </Card>
       )}
     </div>

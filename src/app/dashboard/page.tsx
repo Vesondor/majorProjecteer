@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import { Layout, Menu, Button } from 'antd';
-import { FileTextOutlined, InboxOutlined, SwapOutlined, SettingOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { FileTextOutlined, InboxOutlined, SwapOutlined, SettingOutlined, MenuFoldOutlined, MenuUnfoldOutlined,MessageOutlined,HomeOutlined } from '@ant-design/icons';
 import DashboardHeader from './components/dbHeader';
 import TextContent from './components/items/dbText';
 import InboxContent from './components/items/dbInbox';
@@ -9,6 +9,8 @@ import SettingsContent from './components/items/dbSettings';
 import TransferContent from './components/items/dbTransfer';
 
 import '../../styles/app.css';
+import MessageContent from './components/items/dbMessages';
+import HomeContent from './components/items/dbHome';
 
 const { Sider, Content } = Layout;
 
@@ -21,8 +23,10 @@ const App: React.FC = () => {
 
   const renderComponent = (key: string) => {
     switch (key) {
-      case 'Text Editor':
-        return <TextContent />;
+      case 'Home':
+        return <HomeContent/>
+      case 'Messages':
+        return <MessageContent />;
       case 'Inbox':
         return <InboxContent />;
       case 'Settings':
@@ -30,11 +34,11 @@ const App: React.FC = () => {
       case 'Transfer':
         return <TransferContent />;
       default:
-        return <TextContent />;
+        return <HomeContent />;
     }
   };
 
-  const [activeComponent, setActiveComponent] = useState('Text Editor');
+  const [activeComponent, setActiveComponent] = useState('Home');
 
   return (
     <>
@@ -56,12 +60,17 @@ const App: React.FC = () => {
             theme="dark"
             mode="inline"
             style={{ backgroundColor: '#214B71' }}
-            defaultSelectedKeys={['Text Editor']}
+            defaultSelectedKeys={['Home']}
             items={[
               {
-                key: 'Text Editor',
-                icon: <FileTextOutlined />,
-                label: 'Text Editor',
+                key: 'Home',
+                icon: <HomeOutlined />,
+                label: 'Home',
+              },
+              {
+                key: 'Messages',
+                icon: <MessageOutlined/>,
+                label: 'Messages',
               },
               {
                 key: 'Inbox',
@@ -78,6 +87,7 @@ const App: React.FC = () => {
                 icon: <SettingOutlined />,
                 label: 'Settings',
               },
+
             ]}
             onClick={({ key }) => {
               setActiveComponent(key);
