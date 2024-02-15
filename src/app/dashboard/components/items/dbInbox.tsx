@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Checkbox, Divider, Button, Tag, List, Card, Space, Tooltip } from 'antd';
-import { ArrowLeftOutlined, CheckCircleTwoTone, ClockCircleTwoTone, CloseCircleOutlined, EditTwoTone, InfoCircleOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, CheckCircleTwoTone, ClockCircleTwoTone, CloseCircleOutlined, EditTwoTone, FileTwoTone, InfoCircleOutlined } from '@ant-design/icons';
 import TaskDetail from './dbTaskDetail'; // Ensure this path matches your actual import path
 
 const InboxContent: React.FC = () => {
@@ -78,7 +78,7 @@ const InboxContent: React.FC = () => {
                   title={
                     <span>
                       {/* Add icon before task name */}
-                      {item.completed ? <CheckCircleTwoTone twoToneColor="#52c41a" style={{ marginRight: 5 }} /> : <ClockCircleTwoTone style={{ marginRight: 5 }} />}
+                      {item.completed ? <FileTwoTone twoToneColor="#52c41a" style={{ marginRight: 5 }} /> : <FileTwoTone style={{ marginRight: 5 }} />}
                       <a onClick={() => handleTaskSelect(item)}>{item.name}</a>
                     </span>
                   }

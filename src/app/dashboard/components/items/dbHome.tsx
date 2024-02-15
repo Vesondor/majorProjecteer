@@ -30,7 +30,7 @@ const HomeContent: React.FC = () => {
     };
 
     return (
-        <div className="container mx-auto mt-8 min-h-[700px]">
+        <div className="container mx-auto mt-8 min-h-[680px]">
             {!showTextContent ? (
                 <>
                     <h1 className="text-4xl font-bold mb-6">Document Progress</h1>
@@ -40,13 +40,8 @@ const HomeContent: React.FC = () => {
                                 <a onClick={() => handleFileClick(file)}>
                                     <Card hoverable>
                                         <Space direction="vertical" size={12}>
-                                            {/* Add file preview or icon as needed */}
                                             <FileTextOutlined style={{ fontSize: '24px' }} />
-
-                                            {/* File title */}
                                             <p className="text-lg font-semibold">{file.name}</p>
-
-                                            {/* Timestamp */}
                                             <p>
                                                 <ClockCircleOutlined style={{ marginRight: '8px' }} />
                                                 {file.timestamp}
