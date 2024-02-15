@@ -1,25 +1,78 @@
 /* Remove borders from ReactQuill */
 .react-quill .ql-toolbar,
 .react-quill .ql-container {
-  border: none !important; /* Use !important to override default styles */
+  border: none !important;
+  /* Use !important to override default styles */
 }
+
 .text-editor-container {
-    display: flex;
-    height: 700px; /* Set the height to match the previous code */
-  }
-  
-  .text-container,
-  .editor-container {
-    flex: 1;
-    overflow: auto;
-  }
-  
-  .text-content {
-    padding: 20px;
-    border-right: 1px solid #ccc; /* Add a border to separate the two sections */
-  }
-  
-  .react-quill {
-    padding: 20px;
-  }
-  
+  display: flex;
+  height: 700px;
+  /* Set the height to match the previous code */
+}
+
+.text-container,
+.editor-container {
+  flex: 1;
+  overflow: auto;
+}
+
+.text-content {
+  padding: 20px;
+  border-right: 1px solid #ccc;
+  /* Add a border to separate the two sections */
+}
+
+.react-quill {
+  padding: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+.content-container {
+  position: relative;
+  z-index: 2;
+  padding: 12px; /* Adjust as needed */
+}
+
+.notebook-card {
+  position: relative;
+  border: 5px solid #fff;
+  border-radius: 5px;
+  padding: 0; /* Remove padding */
+  background-color: #fff;
+  transition: box-shadow 0.3s;
+  z-index: 1;
+  width: 180px; /* Adjust the width */
+  height: 250px; /* Adjust the height */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Add a shadow */
+}
+
+.notebook-card:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.line-design {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: repeating-linear-gradient(to bottom, transparent, transparent 1px, #e8e8e8 1px, #e8e8e8 4px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.menu-icon {
+  position: absolute;
+  bottom: 10px; /* Adjust as needed */
+  right: 10px; /* Adjust as needed */
+}

@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import { Layout, Menu, Button } from 'antd';
-import { FileTextOutlined, InboxOutlined, SwapOutlined, SettingOutlined, MenuFoldOutlined, MenuUnfoldOutlined,MessageOutlined,HomeOutlined } from '@ant-design/icons';
+import { FileTextOutlined, InboxOutlined, SwapOutlined, SettingOutlined, MenuFoldOutlined, MenuUnfoldOutlined, MessageOutlined, HomeOutlined } from '@ant-design/icons';
 import DashboardHeader from './components/dbHeader';
 import TextContent from './components/items/dbText';
 import InboxContent from './components/items/dbInbox';
@@ -24,7 +24,7 @@ const App: React.FC = () => {
   const renderComponent = (key: string) => {
     switch (key) {
       case 'Home':
-        return <HomeContent/>
+        return <HomeContent />
       case 'Messages':
         return <MessageContent />;
       case 'Inbox':
@@ -43,7 +43,7 @@ const App: React.FC = () => {
   return (
     <>
       <DashboardHeader />
-      <Layout className="max-h-screen">
+      <Layout style={{ minHeight: '93vh' }}>
         <Sider trigger={null} collapsible collapsed={collapsed} style={{ backgroundColor: '#214B71' }}>
           <div className="logo" style={{ padding: '16px', textAlign: 'center', transition: 'opacity 0.3s', opacity: collapsed ? 0 : 1 }}>
             <img src="/images/logo.png" alt="Logo" style={{
@@ -69,7 +69,7 @@ const App: React.FC = () => {
               },
               {
                 key: 'Messages',
-                icon: <MessageOutlined/>,
+                icon: <MessageOutlined />,
                 label: 'Messages',
               },
               {
@@ -98,8 +98,13 @@ const App: React.FC = () => {
           </div>
         </Sider>
         <Layout>
-          <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-            <div style={{ padding: 24, background: '#fff', textAlign: 'center' }}>
+          <Content
+            style={{
+              margin: '10px',
+              transition: 'all 0.2s',
+            }}
+          >
+            <div>
               {renderComponent(activeComponent)}
             </div>
           </Content>
