@@ -36,34 +36,51 @@ const TextContent: React.FC<TextContentProps> = ({ initialText, onBackButtonClic
     setText(content);
   };
 
+  // Adjustments within your existing TextContent component
   return (
-    <div className="text-editor-container">
+    <div className="text-editor-container" style={{ display: 'flex', flexDirection: 'column' }}>
       <div className="back-button-container" onClick={onBackButtonClick}>
         <LeftOutlined style={{ fontSize: '24px', cursor: 'pointer' }} />
       </div>
-      <div className="text-container mt-4" dangerouslySetInnerHTML={{ __html: text }}></div>
-      <Divider type="vertical" style={{ height: '100%', margin: '0 10px' }} />
-      <div className="editor-container">
-        <ReactQuill
-          theme="snow"
-          value={text}
-          modules={modules}
-          onChange={handleChange}
-          className="react-quill"
-          style={{ height: '100%' }}
-        />
+      <div className="content-container" style={{ flex: 1, display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
+        <div className="text-container" dangerouslySetInnerHTML={{ __html: text }} style={{ flex: 2 }}></div>
+        <Divider type="vertical" style={{ height: '100%', margin: '0 20px', backgroundColor: 'red' }} />
+        <div className="editor-container" style={{ flex: 3, display: 'flex', flexDirection: 'column' }}>
+          <ReactQuill
+            theme="snow"
+            value={text}
+            modules={modules}
+            onChange={handleChange}
+            className="react-quill"
+            style={{ height: '100%', width: 'auto' }}
+          />
+        </div>
       </div>
 
       <style jsx>{`
-        .back-button-container {
-          display: flex;
-          font-size: 20px;
-          align:top;
-          cursor: pointer;
-        }
-      `}</style>
+      .back-button-container {
+        font-size: 20px;
+        align-items: top;
+        cursor: pointer;
+      }
+      .text-container{
+        margin:20px;
+
+      }
+      .text-editor-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+      .content-container {
+        flex: 1;
+        display: flex;
+      }
+    `}</style>
     </div>
   );
+
+
 };
 
 export default TextContent;
