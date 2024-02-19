@@ -1,7 +1,7 @@
 ---
 enable: true
 title: "Ready to manage your agency with BorkPrae?"
-image: "/images/call-to-action.png"
+image: "/images/image5.png"
 description: "Experience the future of Machine Translation with BorkPrae."
 button:
   enable: true

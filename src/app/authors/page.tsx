@@ -2,6 +2,7 @@ import AuthorCard from "@/components/AuthorCard";
 import { getListPage, getSinglePage } from "@/lib/contentParser";
 import Header from "@/partials/Header";
 import PageHeader from "@/partials/PageHeader";
+import Footer from "@/partials/Footer";
 import SeoMeta from "@/partials/SeoMeta";
 import { Author } from "@/types";
 
@@ -30,6 +31,7 @@ const Authors = () => {
           </div>
         </div>
       </section>
+      <Footer />
     </>
   );
 };

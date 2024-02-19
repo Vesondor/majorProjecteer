@@ -3,7 +3,7 @@
 banner:
   title: "Unlock Effortless Translation Management with BorkPrae"
   content: "BorkPrae is a translation management system (TMS) that revolutionizes the translation process with the power of machine learning (OCR) and machine translation. Targeted towards agencies dealing with traditional file management, BorkPrae streamlines and accelerates the translation workflow."
-  image: "/images/banner.png"
+  image: "/images/image.png"
   button:
     enable: true
     label: "Get Started Now"
@@ -12,7 +12,7 @@ banner:
 # Features
 features:
   - title: "Key Highlights of BorkPrae"
-    image: "/images/service-1.png"
+    image: "/images/image2.png"
     content: "Discover how BorkPrae simplifies translation management:"
     bulletpoints:
       - "Harness the potential of advanced OCR and machine translation"
@@ -27,7 +27,7 @@ features:
       link: "http://localhost:3000/login"
 
   - title: "Explore BorkPrae's Comprehensive Features"
-    image: "/images/service-2.png"
+    image: "/images/image3.png"
     content: "BorkPrae offers a range of features designed for translation management success:"
     bulletpoints:
       - "Experience efficient translation with minimal JavaScript overhead"
@@ -39,7 +39,7 @@ features:
       link: "http://localhost:3000/login"
 
   - title: "Why Choose BorkPrae for Your Translation Needs"
-    image: "/images/service-3.png"
+    image: "/images/image4.png"
     content: "BorkPrae empowers your translation projects with the following advantages:"
     bulletpoints:
       - "Instantly load static sites for superior user experience and SEO benefits"
