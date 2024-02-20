@@ -1,46 +1,62 @@
-import React, { useState } from 'react';
-import { FaUser, FaTelegram } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
 import { Card, Avatar } from 'antd';
+import { FaUser } from 'react-icons/fa';
 
 const { Meta } = Card;
 
+// Define types for TypeScript (optional)
+interface Contact {
+  id: number;
+  name: string;
+  username: string;
+}
+
+interface Message {
+  id: number;
+  sender: number; // Consider using 'senderId' for clarity
+  content: string;
+  contactId: number; // The recipient's ID
+}
+
 const MessageContent: React.FC = () => {
-  const [contacts, setContacts] = useState([
-    { id: 1, name: 'John', username: '@john_doe' },
-    { id: 2, name: 'Alice', username: '@alice_smith' },
-    // Add more contacts as needed
+  const [contacts, setContacts] = useState<Contact[]>([
+    { id: 1, name: 'Sunkheang', username: '@bonglee' },
+    { id: 2, name: 'Vathnak', username: '@ericvk' },
+    { id: 3, name: 'Smey', username: '@vesondor' },
   ]);
 
+  const [messages, setMessages] = useState<Message[]>(() => {
+    const storedMessages = localStorage.getItem('messages');
+    return storedMessages ? JSON.parse(storedMessages) : [];
+  });
+
+  const [text, setText] = useState('');
   const [selectedContact, setSelectedContact] = useState<number | null>(null);
-  const [messages, setMessages] = useState<{ contactId: number; messages: { id: number; sender: string; content: string }[] }[]>([]);
+
+  useEffect(() => {
+    localStorage.setItem('messages', JSON.stringify(messages));
+  }, [messages]);
 
   const handleContactClick = (contactId: number) => {
     setSelectedContact(contactId);
-
-    // Simulated static data for messages
-    const staticMessages = [
-      { id: 1, sender: 'John', content: 'Hey, how are you?' },
-      { id: 2, sender: 'You', content: 'Hi John! Doing well, thanks.' },
-      { id: 3, sender: 'John', content: 'That\'s great to hear!' },
-      { id: 4, sender: 'You', content: 'Yes, indeed!' },
-      // Add more messages as needed
-    ];
-
-    // Filter messages for the selected contact
-    const contactMessages = staticMessages.filter(message => message.sender === 'You' || contactId === 1); // Change contactId to the actual id of the selected contact
-
-    // Set the messages for the selected contact
-    setMessages([{ contactId, messages: contactMessages }]);
   };
 
   const handleSendMessage = () => {
-    // Implement sending messages to the selected contact
-    // You can use the selectedContact state to determine the current conversation
-    console.log('Sending message to contact:', selectedContact);
+    if (!selectedContact || text.trim() === '') return;
+
+    const newMessage: Message = {
+      id: Date.now(),
+      sender: 0, // Assuming '0' is the user's ID
+      content: text,
+      contactId: selectedContact,
+    };
+
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    setText('');
   };
 
   return (
-    <div className="flex min-h-[700px]">
+    <div className="flex min-h-[750px]">
       <div className="w-1/5 p-4">
         <div className="text-xl font-bold mb-4">Contacts</div>
         {contacts.map((contact) => (
@@ -51,47 +67,39 @@ const MessageContent: React.FC = () => {
             onClick={() => handleContactClick(contact.id)}
             className={`${selectedContact === contact.id ? 'bg-blue-100' : ''}`}
           >
-            <Meta
-              avatar={<Avatar icon={<FaUser />} />}
-              title={contact.name}
-              description={contact.username}
-            />
+            <Meta avatar={<Avatar icon={<FaUser />} />} title={contact.name} description={contact.username} />
           </Card>
         ))}
       </div>
 
-      <div className="flex-1 p-4">
+      <div className="flex-1 p-4 flex flex-col">
         <div className="text-xl font-bold mb-4">Chat</div>
-        <div className="flex flex-col">
-          {selectedContact !== null ? (
-            <>
-              {messages.map((conversation) => (
-                <div key={conversation.contactId}>
-                  {conversation.messages.map((message) => (
+        <div className="flex flex-col flex-1">
+          <div className="overflow-auto mb-4">
+            {selectedContact !== null ? (
+              messages
+                .filter((message) => message.contactId === selectedContact || message.sender === selectedContact)
+                .map((message) => (
+                  <div key={message.id} className={`my-2 flex ${message.sender === 0 ? 'justify-end' : 'justify-start'}`}>
                     <div
-                      key={message.id}
-                      className={`my-2 flex ${message.sender === 'You' ? 'justify-end' : 'justify-start'}`}
+                      className={`p-3 rounded-lg ${message.sender === 0 ? 'bg-blue-200 text-right' : 'bg-gray-200 text-left'}`}
+                      style={{ maxWidth: '70%' }}
                     >
-                      <div
-                        className={`p-3 rounded-lg ${message.sender === 'You' ? 'bg-blue-200 text-right' : 'bg-gray-200 text-left'}`}
-                        style={{ maxWidth: '70%', wordWrap: 'break-word' }}
-                      >
-                        <span>{message.content}</span>
-                      </div>
+                      <span>{message.content}</span>
                     </div>
-                  ))}
-                </div>
-              ))}
-            </>
-          ) : (
-            <div className="text-gray-500">Please select a contact to start a conversation.</div>
-          )}
-          <div className="mt-4">
+                  </div>
+                ))
+            ) : (
+              <div className="text-gray-500">Please select a contact to start a conversation.</div>
+            )}
+          </div>
+          <div className="mt-auto">
             <div className="flex items-center">
               <input
                 type="text"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
                 placeholder="Type your message..."
-                onChange={(e) => {}}
                 className="flex-1 p-3 border rounded-lg"
               />
               <button

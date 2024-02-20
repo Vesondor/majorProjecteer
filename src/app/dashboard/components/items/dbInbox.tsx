@@ -5,9 +5,9 @@ import TaskDetail from './dbTaskDetail'; // Ensure this path matches your actual
 
 const InboxContent: React.FC = () => {
   const tasks = [
-    { id: 1, name: 'Task 1', category: 'Category 1', details: 'Task 1 details', completed: false },
-    { id: 2, name: 'Task 2', category: 'Category 2', details: 'Task 2 details', completed: false },
-    { id: 3, name: 'Task 3', category: 'Category 3', details: 'Task 3 details', completed: true },
+    { id: 1, name: 'Task 1', category: 'Category 1', details: 'Task 1 details',message:'Hello there, I hope this reached you well', completed: false },
+    { id: 2, name: 'Task 2', category: 'Category 2', details: 'Task 2 details',message:'Hello there, I hope this reached you well', completed: false },
+    { id: 3, name: 'Task 3', category: 'Category 3', details: 'Task 3 details', message:'Hello there, I hope this reached you well', completed: true },
   ];
 
   const [selectedTask, setSelectedTask] = useState<any>(null);
