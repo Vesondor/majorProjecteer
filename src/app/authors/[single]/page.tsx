@@ -1,3 +1,4 @@
+import React from 'react';
 import BlogCard from "@/components/BlogCard";
 import Social from "@/components/Social";
 import config from "@/config/config.json";
@@ -8,23 +9,18 @@ import { slugify } from "@/lib/utils/textConverter";
 import SeoMeta from "@/partials/SeoMeta";
 import { Author, Post } from "@/types";
 
-// remove dynamicParams
-export const dynamicParams = false;
-
-// generate static params
-export const generateStaticParams: () => { single?: string }[] = () => {
-  const authors: Author[] = getSinglePage("authors");
-
-  const paths = authors.map((author) => ({
-    single: author.slug,
-  }));
-
-  return paths;
-};
-
 const AuthorSingle = ({ params }: { params: { single: string } }) => {
   const authors: Author[] = getSinglePage("authors");
-  const author = authors.filter((page) => page.slug === params.single)[0];
+  // Safely find the first matching author or return undefined
+  const author = authors.find((page) => page.slug === params.single);
+
+  // If no author is found, optionally return a placeholder or redirect
+  if (!author) {
+    // Handle the case where no author matches the slug
+    // For example, you might return a "not found" component or redirect
+    return <div>Author not found</div>; // Placeholder example
+  }
+
   const { frontmatter, content } = author;
   const { title, social, meta_title, description, image } = frontmatter;
   const { blog_folder } = config.settings;
@@ -63,7 +59,7 @@ const AuthorSingle = ({ params }: { params: { single: string } }) => {
           </div>
 
           <div className="row justify-center pb-16 pt-14">
-            {postFilterByAuthor.map((post, index: number) => (
+            {postFilterByAuthor.map((post, index) => (
               <div className="mb-12 md:col-6 lg:col-4" key={index}>
                 <BlogCard data={post} />
               </div>
