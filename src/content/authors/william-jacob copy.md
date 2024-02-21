@@ -1,7 +1,7 @@
 ---
-title: William Jacob
-email: williamjacob@email.com
-image: "/images/avatar.png"
+title: San Raksmey
+email: gakoraj@gmail.com
+image: "/images/smey.jpeg"
 description: this is meta description
 social:
   - name: github
@@ -17,4 +17,4 @@ social:
     link: https://linkedin.com
 ---
 
-lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostr navigation et dolore magna aliqua.
+A Software Engineer student, Mobile Developer, Full-Stack Developer. I am an avid learner, always seeking to expand my knowledge and skills. I'm excited to connect with professionals in the industry and contribute to impactful software engineering projects. Let's connect and forge new paths in the world of technology!

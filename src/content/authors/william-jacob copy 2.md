@@ -1,7 +1,7 @@
 ---
-title: William Jacob
-email: williamjacob@email.com
-image: "/images/avatar.png"
+title: Thai Sovathnak
+email: sovathnakthai@gmail.com
+image: "/images/nak.jpeg"
 description: this is meta description
 social:
   - name: github
@@ -17,4 +17,4 @@ social:
     link: https://linkedin.com
 ---
 
-lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostr navigation et dolore magna aliqua.
+A passionate and driven software engineering student, I am on a mission to build the future through technology. Currently pursuing my Bachelor's degree in Software Engineering, I am honing my skills in programming languages like Java and Python, as well as exploring the world of web development and machine learning. I am a firm believer in lifelong learning and continuously seek out new opportunities to enhance my knowledge and practical experience. My goal is to contribute to innovative projects that positively impact people's lives and revolutionize industries. Let's connect and embark on this exciting journey together!

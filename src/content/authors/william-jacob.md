@@ -1,7 +1,7 @@
 ---
-title: William Jacob
-email: williamjacob@email.com
-image: "/images/avatar.png"
+title: Leang Sunkheang
+email: sunkheangleang@gmail.com
+image: "/images/kheang.png"
 description: this is meta description
 social:
   - name: github
@@ -17,4 +17,4 @@ social:
     link: https://linkedin.com
 ---
 
-lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostr navigation et dolore magna aliqua.
+Hello! I'm an aspiring software engineer passionate about bridging the gap between technology and user experience. Currently pursuing my degree in Software Engineering, I am gaining expertise in software development, algorithms, and data structures. I am enthusiastic about building intuitive and user-centered applications that simplify complex problems. I am a quick learner, always eager to explore emerging technologies and frameworks. I believe in the power of collaboration and enjoy working in diverse teams to create innovative solutions. Let's connect and explore opportunities to make a difference through technology!
