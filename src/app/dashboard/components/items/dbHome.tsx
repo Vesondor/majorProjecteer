@@ -19,20 +19,17 @@ const HomeContent: React.FC = () => {
 
 
     const [files, setFiles] = useState<File[]>([
-        { id: 1, name: 'File 1', content: 'Content of File 1', timestamp: '2 hours ago', dateCreated: '2024-02-14', deadline: '2024-02-20' },
-        { id: 2, name: 'File 2', content: 'Content of File 2', timestamp: '1 day ago', dateCreated: '2024-02-13', deadline: '2024-02-21' },
+        { id: 1, name: 'របបផ្អាក ការអនុវត្ត', content: 'មានរបបផ្អាកការអនុវត្តដោយការដាក់ពាក្យបណ្តឹងទាមទារឱ្យ ជំនុំជម្រះសាជាថ្មី។ នេះគឺជារបបផ្អាក ការអនុវត្តមួយរយៈពេល ក្នុងករណីដែលមាន ការដាក់ពាក្យបណ្តឹង ទាមទារឱ្យជំនុំជម្រះសាជាថ្មី រហូតដល់  ពេលបានទទួលលទ្ធផល នៃការដាក់ពាក្យបណ្តឹងនោះ។ ពេលមានសាលក្រម ឬសាលដីកាចូលជាស្ថាពរហើយ តាម ធម្មតា គេអាចអនុវត្តដោយបង្ខំហើយ។ ហេតុនេះ ការសុំផ្អាក ការអនុវត្តនោះ តម្រូវឱ្យមានល័ក្ខខ័ណ្ឌតឹងរ៉ឹងណាស់។', timestamp: '2 hours ago', dateCreated: '2024-02-14', deadline: '2024-02-22' },
+
+        { id: 2, name: 'ដើមបណ្តឹងនៃការជំនុំជម្រះសាជាថ្មី', content: 'ការអះអាងរបស់ដើមបណ្តឹងនៃការជំនុំជម្រះសាជាថ្មី ត្រូវតែហាក់ដូចជា មានមូលហេតុណាមួយដែលមានចែងក្នុងចំណុចណាមួយនៃមូលហេតុ នៃការជំនុំជម្រះសាជាថ្មី(មាត្រា307 កថាខណ្ឌទី1)។ បើសិនជាអង្គហេតុដែលអះអាងដោយដើមបណ្តឹងនៃការជំនុំជម្រះសា ជាថ្មីមិនត្រូវនឹងមូលហេតុណាមួយនៃការជំនុំជម្រះសាជាថ្មីទេ គឺមិនស្រប នឹងល័ក្ខខ័ណ្ឌនេះទេ។', timestamp: '1 day ago', dateCreated: '2024-02-13', deadline: '2024-02-10' },
     ]);
 
     const [completedFiles, setCompletedFiles] = useState<File[]>([
-        { id: 3, name: 'Completed File 1', content: 'Content of Completed File 1', timestamp: '2 hours ago', dateCreated: '2024-02-14', deadline: '2024-02-22' },
-        { id: 4, name: 'Completed File 2', content: 'Content of Completed File 2', timestamp: '1 day ago', dateCreated: '2024-02-13', deadline: '2024-02-10' },
-        { id: 5, name: 'Completed File 3', content: 'Content of Completed File 1', timestamp: '2 hours ago', dateCreated: '2024-02-14', deadline: '2024-02-03' },
-        { id: 6, name: 'Completed File 4', content: 'Content of Completed File 2', timestamp: '1 day ago', dateCreated: '2024-02-01', deadline: '2024-02-19' },
-        { id: 7, name: 'Completed File 3', content: 'Content of Completed File 1', timestamp: '2 hours ago', dateCreated: '2024-02-14', deadline: '2024-02-03' },
-        { id: 8, name: 'Completed File 4', content: 'Content of Completed File 2', timestamp: '1 day ago', dateCreated: '2024-02-01', deadline: '2024-02-19' },
-        { id: 9, name: 'Completed File 3', content: 'Content of Completed File 1', timestamp: '2 hours ago', dateCreated: '2024-02-14', deadline: '2024-02-03' },
-        { id: 10, name: 'Completed File 4', content: 'Content of Completed File 2', timestamp: '1 day ago', dateCreated: '2024-02-01', deadline: '2024-02-19' },
-    
+        { id: 3, name: 'របបផ្អាក ការអនុវត្ត', content: 'មានរបបផ្អាកការអនុវត្តដោយការដាក់ពាក្យបណ្តឹងទាមទារឱ្យ ជំនុំជម្រះសាជាថ្មី។ នេះគឺជារបបផ្អាក ការអនុវត្តមួយរយៈពេល ក្នុងករណីដែលមាន ការដាក់ពាក្យបណ្តឹង ទាមទារឱ្យជំនុំជម្រះសាជាថ្មី រហូតដល់  ពេលបានទទួលលទ្ធផល នៃការដាក់ពាក្យបណ្តឹងនោះ។ ពេលមានសាលក្រម ឬសាលដីកាចូលជាស្ថាពរហើយ តាម ធម្មតា គេអាចអនុវត្តដោយបង្ខំហើយ។ ហេតុនេះ ការសុំផ្អាក ការអនុវត្តនោះ តម្រូវឱ្យមានល័ក្ខខ័ណ្ឌតឹងរ៉ឹងណាស់។', timestamp: '2 hours ago', dateCreated: '2024-02-14', deadline: '2024-02-22' },
+
+        { id: 4, name: 'ដើមបណ្តឹងនៃការជំនុំជម្រះសាជាថ្មី', content: 'ការអះអាងរបស់ដើមបណ្តឹងនៃការជំនុំជម្រះសាជាថ្មី ត្រូវតែហាក់ដូចជា មានមូលហេតុណាមួយដែលមានចែងក្នុងចំណុចណាមួយនៃមូលហេតុ នៃការជំនុំជម្រះសាជាថ្មី(មាត្រា307 កថាខណ្ឌទី1)។ បើសិនជាអង្គហេតុដែលអះអាងដោយដើមបណ្តឹងនៃការជំនុំជម្រះសា ជាថ្មីមិនត្រូវនឹងមូលហេតុណាមួយនៃការជំនុំជម្រះសាជាថ្មីទេ គឺមិនស្រប នឹងល័ក្ខខ័ណ្ឌនេះទេ។', timestamp: '1 day ago', dateCreated: '2024-02-13', deadline: '2024-02-10' },
+
+        { id: 5, name: 'ការជំនុំជម្រះសាជាថ្មី', content: 'ការជំនុំជម្រះសាជាថ្មី គេមិនងាយទទួលស្គាល់ស្រួលៗទេ។ មានតែករណីយ៉ាងពិសេសតិចតួចណាស់ ដែលតុលាការទទួលស្គាល់។ ហេតុនេះហើយ ការផ្អាកការអនុវត្តដោយសារបណ្ដឹង ទាមទារឱ្យជំនុំជម្រះសាជាថ្មីក៏អាចទទួលស្គាល់បានតែក្នុង ករណីពិសេសណាស់ប៉ុណ្ណោះ។', timestamp: '2 hours ago', dateCreated: '2024-02-14', deadline: '2024-02-03' },
         // Add more completed files as needed
     ]);
 
@@ -147,7 +144,7 @@ const HomeContent: React.FC = () => {
 
 
     if (showTextContent && selectedFile) {
-        return <TextContent initialText={selectedFile.content} onBackButtonClick={handleBackButtonClick} />;
+        return <TextContent fileId={selectedFile.id} initialText={selectedFile.content} onBackButtonClick={handleBackButtonClick} />;
     }
     return (
         <div className="container mx-auto mt-8">

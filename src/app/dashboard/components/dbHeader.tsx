@@ -19,7 +19,7 @@ const DashboardHeader: React.FC = () => {
             <button className="text-white focus:outline-none">
               {/* Adjust the icon size here */}
               <FiBell className="h-6 w-6" /> {/* Smaller icon size */}
-              <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1 bg-red-600 text-xs text-white rounded-full">5</span>
+              <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1 bg-red-600 text-xs text-white rounded-full">1</span>
             </button>
           </div>
           <div className="flex items-center space-x-2">
