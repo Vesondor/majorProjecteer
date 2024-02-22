@@ -9,8 +9,9 @@ const Login: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    router.push('/dashboard');
-
+    if(email&&password == 'smey'){
+      router.push('/dashboard');
+    }
   };
 
   return (
