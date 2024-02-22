@@ -7,7 +7,7 @@ banner:
   button:
     enable: true
     label: "Get Started Now"
-    link: "http://localhost:3000/login"
+    link: "/login"
 
 # Features
 features:
@@ -24,7 +24,7 @@ features:
     button:
       enable: true
       label: "Get Started Now"
-      link: "http://localhost:3000/login"
+      link: "/login"
 
   - title: "Explore BorkPrae's Comprehensive Features"
     image: "/images/image3.png"
@@ -36,7 +36,7 @@ features:
     button:
       enable: true
       label: "Get Started"
-      link: "http://localhost:3000/login"
+      link: "/login"
 
   - title: "Why Choose BorkPrae for Your Translation Needs"
     image: "/images/image4.png"
@@ -48,6 +48,6 @@ features:
       - "Stay at the forefront of industry standards with cutting-edge technology"
     button:
       enable: false
-      label: ""
-      link: ""
+      label: "Get Started Now"
+      link: "/login"
 ---
