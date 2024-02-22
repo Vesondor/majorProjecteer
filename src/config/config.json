@@ -1,7 +1,7 @@
 {
   "site": {
     "title": "BorkPrae",
-    "base_url": "http://localhost:3000",
+    "base_url": "https://major-projecteer.vercel.app",
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/images/logo.png",
@@ -30,7 +30,7 @@
   "navigation_button": {
     "enable": true,
     "label": "Get Started",
-    "link": "http://localhost:3000/login"
+    "link": "/login"
   },
 
   "disqus": {
