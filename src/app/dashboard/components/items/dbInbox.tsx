@@ -43,54 +43,56 @@ const InboxContent: React.FC = () => {
   const filteredTasks = tasks.filter(task => task.completed === displayCompleted);
 
   return (
-    <div className="inbox-content" style={{ minHeight: '700px', textAlign: 'left' }}>
-      {selectedTask ? (
-        <>
-          <Button onClick={handleGoBack} icon={<ArrowLeftOutlined />} style={{ marginBottom: '10px' }}>
-            Back
-          </Button>
-          <TaskDetail task={selectedTask} />
-        </>
-      ) : (
-        <Card title="Task List" extra={
-          <Space>
-            <Button
-              icon={<ClockCircleTwoTone twoToneColor={!displayCompleted ? "#52c41a" : ""} />}
-              onClick={() => setDisplayCompleted(false)}
-            >
-              In Progress
+    <div style={{ padding: '20px', backgroundColor: '#214B71', minHeight: '100vh', boxSizing: 'border-box' }}>
+      <div className="inbox-content" style={{ backgroundColor: 'white', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', minHeight: '95vh'}}>
+        {selectedTask ? (
+          <>
+            <Button onClick={handleGoBack} icon={<ArrowLeftOutlined />} style={{ marginBottom: '10px' }}>
+              Back
             </Button>
-            <Button
-              icon={<CheckCircleTwoTone twoToneColor={displayCompleted ? "#1890ff" : ""} />}
-              onClick={() => setDisplayCompleted(true)}
-            >
-              Completed
-            </Button>
-          </Space>
-        }>
-          <List
-            itemLayout="horizontal"
-            dataSource={filteredTasks}
-            renderItem={(item: Task) => (
-              <List.Item
-                key={item.id} // Fix for missing "key" prop error
-                actions={[
-                  <Tooltip title="Details" key="details">
-                    <Button icon={<InfoCircleOutlined />} onClick={() => handleTaskSelect(item)} />
-                  </Tooltip>
-                ]}
+            <TaskDetail task={selectedTask} />
+          </>
+        ) : (
+          <Card title="Task List" extra={
+            <Space>
+              <Button
+                icon={<ClockCircleTwoTone twoToneColor={!displayCompleted ? "#52c41a" : ""} />}
+                onClick={() => setDisplayCompleted(false)}
               >
-                <List.Item.Meta
-                  avatar={<Checkbox checked={item.completed} onChange={() => handleTaskCheck(item.id)} />}
-                  title={<a onClick={() => handleTaskSelect(item)}>{item.name}</a>}
-                  description={item.category}
-                />
-                {item.completed ? <Tag color="success">Completed</Tag> : <Tag color="processing">In Progress</Tag>}
-              </List.Item>
-            )}
-          />
-        </Card>
-      )}
+                In Progress
+              </Button>
+              <Button
+                icon={<CheckCircleTwoTone twoToneColor={displayCompleted ? "#1890ff" : ""} />}
+                onClick={() => setDisplayCompleted(true)}
+              >
+                Completed
+              </Button>
+            </Space>
+          }>
+            <List
+              itemLayout="horizontal"
+              dataSource={filteredTasks}
+              renderItem={(item: Task) => (
+                <List.Item
+                  key={item.id} // Fix for missing "key" prop error
+                  actions={[
+                    <Tooltip title="Details" key="details">
+                      <Button icon={<InfoCircleOutlined />} onClick={() => handleTaskSelect(item)} />
+                    </Tooltip>
+                  ]}
+                >
+                  <List.Item.Meta
+                    avatar={<Checkbox checked={item.completed} onChange={() => handleTaskCheck(item.id)} />}
+                    title={<a onClick={() => handleTaskSelect(item)}>{item.name}</a>}
+                    description={item.category}
+                  />
+                  {item.completed ? <Tag color="success">Completed</Tag> : <Tag color="processing">In Progress</Tag>}
+                </List.Item>
+              )}
+            />
+          </Card>
+        )}
+      </div>
     </div>
   );
 };

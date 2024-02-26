@@ -42,6 +42,7 @@ const App: React.FC = () => {
 
   return (
     <>
+      <DashboardHeader />
       <Layout style={{ minHeight: '93vh' }}>
         <Sider trigger={null} collapsible collapsed={collapsed} style={{ backgroundColor: '#214B71' }}>
           <div className="logo" style={{ padding: '16px', textAlign: 'center', transition: 'opacity 0.3s', opacity: collapsed ? 0 : 1 }}>
@@ -99,7 +100,7 @@ const App: React.FC = () => {
         <Layout>
           <Content
             style={{
-              margin: '0', // Updated from '10px' to '0' to remove padding around the content
+              margin: '10px',
               transition: 'all 0.2s',
             }}
           >
@@ -111,7 +112,6 @@ const App: React.FC = () => {
       </Layout>
     </>
   );
-
 };
 
 export default App;

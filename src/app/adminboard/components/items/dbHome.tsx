@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Row, Col, Dropdown, Menu, Typography, Button, List, Input, Divider } from 'antd';
-import { MoreOutlined, AppstoreOutlined, UnorderedListOutlined, SearchOutlined, FileTextOutlined, CheckCircleOutlined, SortAscendingOutlined } from '@ant-design/icons';
-
+import { Card, Row, Col, Dropdown, Menu, Typography, Button, List } from 'antd';
+import { MoreOutlined, AppstoreOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import TextContent from './dbText';
 import '../../../../styles/app.css';
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 interface File {
     id: number;
@@ -39,8 +38,6 @@ const HomeContent: React.FC = () => {
 
     const [sortCriterionRecent, setSortCriterionRecent] = useState<'dateCreated' | 'deadline'>('dateCreated');
     const [sortCriterionCompleted, setSortCriterionCompleted] = useState<'dateCreated' | 'deadline'>('dateCreated');
-    const [searchQuery, setSearchQuery] = useState('');
-
 
     const toggleViewMode = () => {
         setViewMode(prevMode => (prevMode === 'card' ? 'list' : 'card'));
@@ -80,15 +77,6 @@ const HomeContent: React.FC = () => {
     const handleRename = () => {/* Rename logic */ };
     const handleRemove = () => {/* Remove logic */ };
     const handleShare = () => {/* Share logic */ };
-
-    const filteredFiles = files.filter(file =>
-        file.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    const filteredCompletedFiles = completedFiles.filter(file =>
-        file.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
 
     const handleSortByRecent = (criteria: 'dateCreated' | 'deadline') => {
         setSortCriterionRecent(criteria);
@@ -159,79 +147,43 @@ const HomeContent: React.FC = () => {
         return <TextContent fileId={selectedFile.id} initialText={selectedFile.content} onBackButtonClick={handleBackButtonClick} />;
     }
     return (
-        <div style={{
-            backgroundColor: '#214B71', paddingTop: '10px', paddingBottom: '20px', paddingLeft: '20px', paddingRight: '20px',
-            width: '100%', boxSizing: 'border-box'
-        }}>
-            <div className="container mx-auto mt-8" style={{
-                backgroundColor: 'white', borderRadius: '10px', padding: '20px',
-                margin: '0 auto', width: '100%', boxSizing: 'border-box', maxWidth: '100%'
-            }}>
-
-                {/* App Name and Search Bar */}
-                <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <AppstoreOutlined style={{ fontSize: '24px', color: '#214B71', marginRight: '8px' }} />
-                        <Typography.Title level={4} style={{ margin: 0, color: '#214B71' }}>BorkPrae</Typography.Title>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <Button type="default" icon={viewMode === 'card' ? <UnorderedListOutlined /> : <AppstoreOutlined />} onClick={toggleViewMode} style={{ marginRight: '16px', flexShrink: 0 }} />
-                        <Input
-                            suffix={
-                                <Button icon={<SearchOutlined />} type="primary" style={{ border: 'none', background: 'none' }} />
-                            }
-                            placeholder="Search files..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            style={{ maxWidth: '400px', width: '100%', borderRadius: '20px', padding: '0 12px' }}
-                        />
-                    </div>
-
-                </div>
-
-                <Divider style={{ margin: '20px 0' }} />
-
-                {/* Recent Documents Section */}
+        <div className="container mx-auto mt-8">
+            <div className="flex justify-between items-center">
+                <h1 className="text-4xl font-bold mb-6">Recent Documents</h1>
                 <div>
-                    <Title level={3} style={{ color: '#214B71' }}>
-                        <FileTextOutlined /> Recent Documents
-                    </Title>
-                    {viewMode === 'card' ? (
-                        <Row gutter={[16, 16]}>
-                            {filteredFiles.map(file => renderFileCard(file))}
-                        </Row>
-                    ) : (
-                        <List dataSource={filteredFiles} renderItem={renderFileList} />
-                    )}
+                    <Dropdown overlay={() => menu(setSortCriterionRecent)} trigger={['click']}>
+                        <Button>Sort by {sortCriterionRecent === 'dateCreated' ? 'Deadline' : 'Date Created'}</Button>
+                    </Dropdown>
+                    <Button onClick={toggleViewMode} style={{ marginLeft: '8px' }}>
+                        {viewMode === 'card' ? <UnorderedListOutlined /> : <AppstoreOutlined />}
+                    </Button>
                 </div>
-
-                <Divider style={{ margin: '40px 0' }} />
-
-                {/* Completed Documents Section */}
-                <div>
-                    <Title level={3} style={{ color: '#214B71' }}>
-                        <CheckCircleOutlined /> Completed Documents
-                    </Title>
-                    {viewMode === 'card' ? (
-                        <Row gutter={[16, 16]}>
-                            {filteredCompletedFiles.map(file => renderFileCard(file))}
-                        </Row>
-                    ) : (
-                        <List dataSource={filteredCompletedFiles} renderItem={renderFileList} />
-                    )}
-                </div>
-
             </div>
+
+            {viewMode === 'card' ? (
+                <Row gutter={[16, 16]}>
+                    {files.map(file => renderFileCard(file))}
+                </Row>
+            ) : (
+                <List dataSource={files} renderItem={renderFileList} />
+            )}
+
+            <div className="flex justify-between items-center mt-8">
+                <h1 className="text-4xl font-bold mb-6">Completed Documents</h1>
+                <Dropdown overlay={() => menu(setSortCriterionCompleted)} trigger={['click']}>
+                    <Button>Sort by {sortCriterionCompleted === 'dateCreated' ? 'Deadline' : 'Date Created'}</Button>
+                </Dropdown>
+            </div>
+
+            {viewMode === 'card' ? (
+                <Row gutter={[16, 16]}>
+                    {completedFiles.map(file => renderFileCard(file))}
+                </Row>
+            ) : (
+                <List dataSource={completedFiles} renderItem={renderFileList} />
+            )}
         </div>
     );
-
-
-
-
-
-
-
-
 };
 
 export default HomeContent;
