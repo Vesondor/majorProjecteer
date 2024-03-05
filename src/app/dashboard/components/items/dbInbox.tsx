@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Checkbox, Divider, Button, Tag, List, Card, Space, Tooltip } from 'antd';
-import { ArrowLeftOutlined, CheckCircleTwoTone, ClockCircleTwoTone, EditTwoTone, FileTwoTone, InfoCircleOutlined } from '@ant-design/icons';
-import TaskDetail from './dbTaskDetail'; // Ensure path correctness
+import { Checkbox, Button, Tag, List, Card, Space, Tooltip } from 'antd';
+import { ArrowLeftOutlined, CheckCircleTwoTone, ClockCircleTwoTone, InfoCircleOutlined } from '@ant-design/icons';
+import TaskDetail from './dbTaskDetail'; // Ensure the import path is correct
 
-// Assuming Task type for better type checking
+// Define the Task interface for better type checking
 interface Task {
   id: number;
   name: string;
@@ -14,44 +14,39 @@ interface Task {
 }
 
 const InboxContent: React.FC = () => {
+  // State for the list of tasks
   const [tasks, setTasks] = useState<Task[]>([
     { id: 1, name: 'Task 1', category: 'Category 1', details: 'Task 1 details', message: 'Hello there, I hope this reached you well', completed: false },
     { id: 2, name: 'Task 2', category: 'Category 2', details: 'Task 2 details', message: 'Hello there, I hope this reached you well', completed: false },
     { id: 3, name: 'Task 3', category: 'Category 3', details: 'Task 3 details', message: 'Hello there, I hope this reached you well', completed: true },
   ]);
 
+  // State for the currently selected task
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
+  // State to toggle between displaying completed and in-progress tasks
   const [displayCompleted, setDisplayCompleted] = useState(false);
 
+  // Function to handle task selection
   const handleTaskSelect = (task: Task) => {
     setSelectedTask(task);
   };
 
-  const handleGoBack = () => {
-    setSelectedTask(null);
-  };
-
-  // Updated to properly modify state
+  // Function to toggle the completion status of a task
   const handleTaskCheck = (taskId: number) => {
     setTasks(prevTasks =>
-      prevTasks.map(task =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task
-      )
+      prevTasks.map(task => task.id === taskId ? { ...task, completed: !task.completed } : task)
     );
   };
 
+  // Filter tasks based on the completion status
   const filteredTasks = tasks.filter(task => task.completed === displayCompleted);
 
   return (
     <div style={{ padding: '20px', backgroundColor: '#214B71', minHeight: '100vh', boxSizing: 'border-box' }}>
       <div className="inbox-content" style={{ backgroundColor: 'white', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', minHeight: '95vh'}}>
         {selectedTask ? (
-          <>
-            <Button onClick={handleGoBack} icon={<ArrowLeftOutlined />} style={{ marginBottom: '10px' }}>
-              Back
-            </Button>
-            <TaskDetail task={selectedTask} />
-          </>
+          <TaskDetail task={selectedTask} onBack={() => setSelectedTask(null)} />
         ) : (
           <Card title="Task List" extra={
             <Space>
@@ -74,11 +69,10 @@ const InboxContent: React.FC = () => {
               dataSource={filteredTasks}
               renderItem={(item: Task) => (
                 <List.Item
-                  key={item.id} // Fix for missing "key" prop error
                   actions={[
-                    <Tooltip title="Details" key="details">
+                    <Tooltip title="Details">
                       <Button icon={<InfoCircleOutlined />} onClick={() => handleTaskSelect(item)} />
-                    </Tooltip>
+                    </Tooltip>,
                   ]}
                 >
                   <List.Item.Meta

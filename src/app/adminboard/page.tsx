@@ -4,7 +4,6 @@ import { Layout, Menu, Button } from 'antd';
 import { FileTextOutlined, InboxOutlined, SwapOutlined, SettingOutlined, MenuFoldOutlined, MenuUnfoldOutlined, MessageOutlined, HomeOutlined } from '@ant-design/icons';
 import DashboardHeader from './components/dbHeader';
 import TextContent from './components/items/dbText';
-import InboxContent from './components/items/dbInbox';
 import SettingsContent from './components/items/dbSettings';
 import TransferContent from './components/items/dbTransfer';
 
@@ -27,8 +26,6 @@ const App: React.FC = () => {
         return <HomeContent />
       case 'Messages':
         return <MessageContent />;
-      case 'Inbox':
-        return <InboxContent />;
       case 'Settings':
         return <SettingsContent />;
       case 'Transfer':
@@ -42,7 +39,6 @@ const App: React.FC = () => {
 
   return (
     <>
-      <DashboardHeader />
       <Layout style={{ minHeight: '93vh' }}>
         <Sider trigger={null} collapsible collapsed={collapsed} style={{ backgroundColor: '#214B71' }}>
           <div className="logo" style={{ padding: '16px', textAlign: 'center', transition: 'opacity 0.3s', opacity: collapsed ? 0 : 1 }}>
@@ -73,11 +69,6 @@ const App: React.FC = () => {
                 label: 'Messages',
               },
               {
-                key: 'Inbox',
-                icon: <InboxOutlined />,
-                label: 'Inbox',
-              },
-              {
                 key: 'Transfer',
                 icon: <SwapOutlined />,
                 label: 'Transfer',
@@ -100,7 +91,7 @@ const App: React.FC = () => {
         <Layout>
           <Content
             style={{
-              margin: '10px',
+              margin: '0', // Updated from '10px' to '0' to remove padding around the content
               transition: 'all 0.2s',
             }}
           >
@@ -112,6 +103,7 @@ const App: React.FC = () => {
       </Layout>
     </>
   );
+
 };
 
 export default App;

@@ -22,7 +22,7 @@ const TextContent: React.FC<TextContentProps> = ({ fileId, initialText, onBackBu
     if (savedText) {
       setText(savedText);
     } else {
-      setText(initialText); 
+      setText(initialText);
     }
   }, [fileId, initialText]);
 
@@ -45,7 +45,7 @@ const TextContent: React.FC<TextContentProps> = ({ fileId, initialText, onBackBu
   };
 
   useEffect(() => {
-    const saveText = (event:any) => {
+    const saveText = (event: any) => {
       if ((event.metaKey || event.ctrlKey) && event.key === 's') {
         event.preventDefault(); // Prevent the default save dialog
         localStorage.setItem(`savedText_${fileId}`, text); // Save the current text to localStorage with unique key
@@ -70,7 +70,8 @@ const TextContent: React.FC<TextContentProps> = ({ fileId, initialText, onBackBu
           <h4>Original Text</h4>
           <div className="original-text" dangerouslySetInnerHTML={{ __html: initialText }} />
         </div>
-        <div style={{ width: '2px', backgroundColor: '#ccc'}} className="divider" />
+        <div style={{ width: '2px', backgroundColor: '#ccc', marginRight: '20px' }} className="divider" />
+
         <div className="translation-editor-section" style={{ flex: 1, overflow: 'auto' }}>
           <h4>Text Editor</h4>
           <ReactQuill theme="snow" value={text} onChange={handleChange} modules={modules} style={{ height: '100%', overflow: 'auto' }} />

@@ -1,62 +1,95 @@
 "use client"
 import React, { useState } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'; // Corrected import from 'next/router'
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>(""); // Changed from email to username for consistency with backend
   const [password, setPassword] = useState<string>("");
   const router = useRouter();
 
+  // Function to handle login on form submission
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if(email&&password == 'smey'){
-      router.push('/dashboard');
+
+    // Send a POST request to the backend with the username and password
+    const response = await fetch('http://localhost:3001/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "userid": 1,
+        username,
+        password,
+      }),
+    });
+
+    const data = await response.json();
+
+    // Check if the login was successful and handle redirection based on the user's role
+    if (data.loggedIn) {
+      localStorage.setItem('token', data.token); // Store the token for future requests
+
+      switch(data.role) {
+        case 'translator':
+          router.push('/dashboard');
+          break;
+        case 'manager':
+          router.push('/adminboard');
+          break;
+        default:
+          // Handle unexpected roles or errors
+          console.error('Unexpected role or error');
+      }
+    } else {
+      // Handle login failure (e.g., show an error message)
+      console.error('Login failed');
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md px-6 py-8 mx-auto bg-white rounded shadow-md">
-            <h2 className="text-4xl font-semibold mb-4 text-center">Login</h2>
-            <form onSubmit={handleLogin}>
-              <div className="mb-6">
-                <label htmlFor="email" className="form-label">
-                  Email <span className="text-red-500">*</span>
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  className="form-input"
-                  placeholder="john"
-                  type="text"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="mb-6">
-                <label htmlFor="password" className="form-label">
-                  Password <span className="text-red-500">*</span>
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  className="form-input"
-                  placeholder="Password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="text-center">
-                <button type="submit" className="btn btn-primary flex items-center">
-                  Login
-                </button>
-              </div>
-            </form>
+        <h2 className="text-4xl font-semibold mb-4 text-center">Login</h2>
+        <form onSubmit={handleLogin}>
+          <div className="mb-6">
+            <label htmlFor="username" className="form-label">
+              Username <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="username"
+              name="username"
+              className="form-input"
+              placeholder="Username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
           </div>
-        </div>
+          <div className="mb-6">
+            <label htmlFor="password" className="form-label">
+              Password <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="password"
+              name="password"
+              className="form-input"
+              placeholder="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="text-center">
+            <button type="submit" className="btn btn-primary flex items-center">
+              Login
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

@@ -1,187 +1,141 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Row, Col, Dropdown, Menu, Typography, Button, List } from 'antd';
-import { MoreOutlined, AppstoreOutlined, UnorderedListOutlined } from '@ant-design/icons';
-import TextContent from './dbText';
-import '../../../../styles/app.css';
-const { Text } = Typography;
+import React, { useState } from 'react';
+import { Card, Row, Col, Typography, Input, Divider, Tag, Avatar, Button } from 'antd';
+import { SearchOutlined, CheckCircleOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
+import CreateTask from './dbCreateTask'; // Import the CreateTask component
+import Charts from './chart';
+import TaskDetail from './dbTaskDetail';
 
-interface File {
-    id: number;
-    name: string;
-    content: string;
-    timestamp: string;
-    dateCreated: string;
-    deadline: string;
-}
+const { Title, Text } = Typography;
 
-const HomeContent: React.FC = () => {
-    const [viewMode, setViewMode] = useState<'card' | 'list'>('card');
+const HomeContent = () => {
+    const [tasks, setTasks] = useState([
+        {
+            id: 1,
+            title: 'Translate Document A',
+            description: 'Translate the document from English to Spanish.',
+            dateAssigned: '2024-01-01',
+            deadline: '2024-01-15',
+            status: 'New',
+            assignedTo: 'John Doe',
+        },
+        {
+            id: 2,
+            title: 'Translate Document B',
+            description: 'Translate the document from English to Khmer.',
+            dateAssigned: '2024-01-01',
+            deadline: '2024-01-15',
+            status: 'In-Progress',
+            assignedTo: 'Jane Chan',
+        },
+        {
+            id: 3,
+            title: 'Translate Document A',
+            description: 'Translate the document from English to Spanish.',
+            dateAssigned: '2024-01-01',
+            deadline: '2024-01-15',
+            status: 'Completed',
+            assignedTo: 'Giorno Giovana',
+        },
+        {
+            id: 4,
+            title: 'Translate Document B',
+            description: 'Translate the document from English to Khmer.',
+            dateAssigned: '2024-01-01',
+            deadline: '2024-01-15',
+            status: 'In-Progress',
+            assignedTo: 'John Doe',
+        },
 
-
-    const [files, setFiles] = useState<File[]>([
-        { id: 1, name: 'របបផ្អាក ការអនុវត្ត', content: 'មានរបបផ្អាកការអនុវត្តដោយការដាក់ពាក្យបណ្តឹងទាមទារឱ្យ ជំនុំជម្រះសាជាថ្មី។ នេះគឺជារបបផ្អាក ការអនុវត្តមួយរយៈពេល ក្នុងករណីដែលមាន ការដាក់ពាក្យបណ្តឹង ទាមទារឱ្យជំនុំជម្រះសាជាថ្មី រហូតដល់  ពេលបានទទួលលទ្ធផល នៃការដាក់ពាក្យបណ្តឹងនោះ។ ពេលមានសាលក្រម ឬសាលដីកាចូលជាស្ថាពរហើយ តាម ធម្មតា គេអាចអនុវត្តដោយបង្ខំហើយ។ ហេតុនេះ ការសុំផ្អាក ការអនុវត្តនោះ តម្រូវឱ្យមានល័ក្ខខ័ណ្ឌតឹងរ៉ឹងណាស់។', timestamp: '2 hours ago', dateCreated: '2024-02-14', deadline: '2024-02-22' },
-
-        { id: 2, name: 'ដើមបណ្តឹងនៃការជំនុំជម្រះសាជាថ្មី', content: 'ការអះអាងរបស់ដើមបណ្តឹងនៃការជំនុំជម្រះសាជាថ្មី ត្រូវតែហាក់ដូចជា មានមូលហេតុណាមួយដែលមានចែងក្នុងចំណុចណាមួយនៃមូលហេតុ នៃការជំនុំជម្រះសាជាថ្មី(មាត្រា307 កថាខណ្ឌទី1)។ បើសិនជាអង្គហេតុដែលអះអាងដោយដើមបណ្តឹងនៃការជំនុំជម្រះសា ជាថ្មីមិនត្រូវនឹងមូលហេតុណាមួយនៃការជំនុំជម្រះសាជាថ្មីទេ គឺមិនស្រប នឹងល័ក្ខខ័ណ្ឌនេះទេ។', timestamp: '1 day ago', dateCreated: '2024-02-13', deadline: '2024-02-10' },
     ]);
 
-    const [completedFiles, setCompletedFiles] = useState<File[]>([
-        { id: 3, name: 'របបផ្អាក ការអនុវត្ត', content: 'មានរបបផ្អាកការអនុវត្តដោយការដាក់ពាក្យបណ្តឹងទាមទារឱ្យ ជំនុំជម្រះសាជាថ្មី។ នេះគឺជារបបផ្អាក ការអនុវត្តមួយរយៈពេល ក្នុងករណីដែលមាន ការដាក់ពាក្យបណ្តឹង ទាមទារឱ្យជំនុំជម្រះសាជាថ្មី រហូតដល់  ពេលបានទទួលលទ្ធផល នៃការដាក់ពាក្យបណ្តឹងនោះ។ ពេលមានសាលក្រម ឬសាលដីកាចូលជាស្ថាពរហើយ តាម ធម្មតា គេអាចអនុវត្តដោយបង្ខំហើយ។ ហេតុនេះ ការសុំផ្អាក ការអនុវត្តនោះ តម្រូវឱ្យមានល័ក្ខខ័ណ្ឌតឹងរ៉ឹងណាស់។', timestamp: '2 hours ago', dateCreated: '2024-02-14', deadline: '2024-02-22' },
+    const [searchQuery, setSearchQuery] = useState('');
+    const [showCreateTask, setShowCreateTask] = useState(false);
+    const [selectedTask, setSelectedTask] = useState(null); // State to track the selected task
 
-        { id: 4, name: 'ដើមបណ្តឹងនៃការជំនុំជម្រះសាជាថ្មី', content: 'ការអះអាងរបស់ដើមបណ្តឹងនៃការជំនុំជម្រះសាជាថ្មី ត្រូវតែហាក់ដូចជា មានមូលហេតុណាមួយដែលមានចែងក្នុងចំណុចណាមួយនៃមូលហេតុ នៃការជំនុំជម្រះសាជាថ្មី(មាត្រា307 កថាខណ្ឌទី1)។ បើសិនជាអង្គហេតុដែលអះអាងដោយដើមបណ្តឹងនៃការជំនុំជម្រះសា ជាថ្មីមិនត្រូវនឹងមូលហេតុណាមួយនៃការជំនុំជម្រះសាជាថ្មីទេ គឺមិនស្រប នឹងល័ក្ខខ័ណ្ឌនេះទេ។', timestamp: '1 day ago', dateCreated: '2024-02-13', deadline: '2024-02-10' },
 
-        { id: 5, name: 'ការជំនុំជម្រះសាជាថ្មី', content: 'ការជំនុំជម្រះសាជាថ្មី គេមិនងាយទទួលស្គាល់ស្រួលៗទេ។ មានតែករណីយ៉ាងពិសេសតិចតួចណាស់ ដែលតុលាការទទួលស្គាល់។ ហេតុនេះហើយ ការផ្អាកការអនុវត្តដោយសារបណ្ដឹង ទាមទារឱ្យជំនុំជម្រះសាជាថ្មីក៏អាចទទួលស្គាល់បានតែក្នុង ករណីពិសេសណាស់ប៉ុណ្ណោះ។', timestamp: '2 hours ago', dateCreated: '2024-02-14', deadline: '2024-02-03' },
-        // Add more completed files as needed
-    ]);
-
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [showTextContent, setShowTextContent] = useState(false);
-
-    const [sortCriterionRecent, setSortCriterionRecent] = useState<'dateCreated' | 'deadline'>('dateCreated');
-    const [sortCriterionCompleted, setSortCriterionCompleted] = useState<'dateCreated' | 'deadline'>('dateCreated');
-
-    const toggleViewMode = () => {
-        setViewMode(prevMode => (prevMode === 'card' ? 'list' : 'card'));
+    const selectTask = (task: any) => {
+        setSelectedTask(task);
     };
 
-
-    const sortFiles = (filesArray: File[], criterion: 'dateCreated' | 'deadline') => {
-        return [...filesArray].sort((a, b) => new Date(a[criterion]).getTime() - new Date(b[criterion]).getTime());
+    const toggleCreateTask = () => {
+        setShowCreateTask(!showCreateTask);
     };
 
-    const toggleSortCriterionRecent = () => {
-        setSortCriterionRecent(prevCriterion => prevCriterion === 'dateCreated' ? 'deadline' : 'dateCreated');
-    };
-
-    const toggleSortCriterionCompleted = () => {
-        setSortCriterionCompleted(prevCriterion => prevCriterion === 'dateCreated' ? 'deadline' : 'dateCreated');
-    };
-
-    useEffect(() => {
-        setFiles(sortFiles(files, sortCriterionRecent));
-    }, [sortCriterionRecent, files]);
-
-    useEffect(() => {
-        setCompletedFiles(sortFiles(completedFiles, sortCriterionCompleted));
-    }, [sortCriterionCompleted, completedFiles]);
-
-    const handleFileClick = (file: File) => {
-        setSelectedFile(file);
-        setShowTextContent(true);
-    };
-
-    const handleBackButtonClick = () => {
-        setShowTextContent(false);
-        setSelectedFile(null);
-    };
-
-    const handleRename = () => {/* Rename logic */ };
-    const handleRemove = () => {/* Remove logic */ };
-    const handleShare = () => {/* Share logic */ };
-
-    const handleSortByRecent = (criteria: 'dateCreated' | 'deadline') => {
-        setSortCriterionRecent(criteria);
-    };
-
-    const handleSortByCompleted = (criteria: 'dateCreated' | 'deadline') => {
-        setSortCriterionCompleted(criteria);
-    };
-
-    const renderFileCard = (file: File) => (
-        <Col key={file.id} xs={24} sm={12} md={12} lg={6}>
-            <div>
-                <p className="text-lg font-semibold">{file.name}</p>
-                <Card
-                    hoverable
-                    onClick={() => handleFileClick(file)}
-                    className="notebook-card"
-                >
-                    <div className="line-design"></div> {/* Add line design inside the card */}
-                </Card>
-                <div className="mt-2 flex flex-col">
-                    <div className="flex items-center">
-                        <Text type="secondary" style={{ marginRight: '8px', fontSize: '12px' }}>
-                            {`Date Created: ${file.dateCreated}`}
-                        </Text>
-                        <Dropdown overlay={() => menu((handleShare))} trigger={['click']}>
-                            <MoreOutlined style={{ fontSize: '24px' }} />
-                        </Dropdown>
-                    </div>
-                    <Text className="text-red-700" style={{ fontSize: '12px' }}>
-                        {`Deadline: ${file.deadline}`}
-                    </Text>
-                </div>
-            </div>
-        </Col>
+    const filteredTasks = tasks.filter(task =>
+        task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const menu = (handleSort: (criteria: 'dateCreated' | 'deadline') => void) => (
-        <Menu>
-            <Menu.Item key="dateCreated" onClick={() => handleSort('dateCreated')}>Sort by Date Created</Menu.Item>
-            <Menu.Item key="deadline" onClick={() => handleSort('deadline')}>Sort by Deadline</Menu.Item>
-        </Menu>
-    );
-    const renderFileList = (file: File) => (
-        <List.Item
-            key={file.id}
-            onClick={() => handleFileClick(file)}
-            style={{
-                cursor: 'pointer',
-                transition: 'background-color 0.3s',
-            }}
-            className="hoverable-list-item" // Assuming you have defined this class in your CSS
-        >
-            <List.Item.Meta
-                title={<div>{file.name}</div>}
-                description={
-                    <div>
-                        <div>Date Created: {file.dateCreated}</div>
-                        <div style={{ color: 'red' }}>Deadline: {file.deadline}</div>
-                    </div>
-                }
-            />
-        </List.Item>
-    );
+    const getStatusColor = (status: any) => {
+        switch (status) {
+            case 'New': return 'volcano';
+            case 'In-Progress': return 'geekblue';
+            case 'Completed': return 'green';
+            default: return 'default';
+        }
+    };
 
-
-    if (showTextContent && selectedFile) {
-        return <TextContent fileId={selectedFile.id} initialText={selectedFile.content} onBackButtonClick={handleBackButtonClick} />;
+    const getStatusIcon = (status: any) => {
+        switch (status) {
+            case 'In-Progress': return <ClockCircleOutlined />;
+            case 'Completed': return <CheckCircleOutlined />;
+            default: return null;
+        }
+    };
+    if (selectedTask) {
+        return <TaskDetail task={selectedTask} onBack={() => setSelectedTask(null)} />;
     }
+
     return (
-        <div className="container mx-auto mt-8">
-            <div className="flex justify-between items-center">
-                <h1 className="text-4xl font-bold mb-6">Recent Documents</h1>
-                <div>
-                    <Dropdown overlay={() => menu(setSortCriterionRecent)} trigger={['click']}>
-                        <Button>Sort by {sortCriterionRecent === 'dateCreated' ? 'Deadline' : 'Date Created'}</Button>
-                    </Dropdown>
-                    <Button onClick={toggleViewMode} style={{ marginLeft: '8px' }}>
-                        {viewMode === 'card' ? <UnorderedListOutlined /> : <AppstoreOutlined />}
-                    </Button>
+        <div style={{ padding: '20px', backgroundColor: '#214B71', minHeight: '100vh', boxSizing: 'border-box' }}>
+            <div style={{ backgroundColor: 'white', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', minHeight: '95vh', padding: '20px' }}>
+
+                <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Title level={3}>Task Manager</Title>
+                    <Button type="primary" onClick={toggleCreateTask} style={{ backgroundColor: '#214B71', borderColor: '#214B71' }}>{showCreateTask ? 'Back' : "Create Task"}</Button>
                 </div>
+                {showCreateTask ?
+                    <CreateTask />
+                    : (
+                        <div>
+                            <Input
+                                prefix={<SearchOutlined />}
+                                placeholder="Search tasks..."
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
+                                style={{ width: '40%', marginBottom: '20px' }}
+                            />
+                            <Title level={4}>Tasks Overview</Title>
+                            <Charts />
+
+                            <Divider />
+                            <Row gutter={16}>
+                                {filteredTasks.map(task => (
+                                    <Col key={task.id} xs={24} sm={12} md={8} lg={6}>
+                                        <Card
+                                            hoverable
+                                            onClick={() => selectTask(task)} // Set the selected task on click
+                                            style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', marginBottom: '20px' }}
+                                            title={<Text strong style={{ color: '#1890ff' }}>{task.title}</Text>}
+                                            extra={<Tag color={getStatusColor(task.status)} icon={getStatusIcon(task.status)}>{task.status}</Tag>}
+                                        >
+                                            <Text style={{ color: '#666' }}>{task.description}</Text>
+                                            <Divider style={{ margin: '12px 0' }} />
+                                            <Avatar size="small" icon={<UserOutlined />} style={{ marginRight: 8 }} />
+                                            <Text strong>{task.assignedTo}</Text>
+                                            <br />
+                                            <Text type="secondary" style={{ color: '#999' }}>Assigned: {task.dateAssigned}</Text>
+                                            <br />
+                                            <Text type="secondary" style={{ color: '#999' }}>Deadline: {task.deadline}</Text>
+                                        </Card>
+                                    </Col>
+                                ))}
+                            </Row>
+                            <Divider />
+
+                        </div>
+                    )}
             </div>
-
-            {viewMode === 'card' ? (
-                <Row gutter={[16, 16]}>
-                    {files.map(file => renderFileCard(file))}
-                </Row>
-            ) : (
-                <List dataSource={files} renderItem={renderFileList} />
-            )}
-
-            <div className="flex justify-between items-center mt-8">
-                <h1 className="text-4xl font-bold mb-6">Completed Documents</h1>
-                <Dropdown overlay={() => menu(setSortCriterionCompleted)} trigger={['click']}>
-                    <Button>Sort by {sortCriterionCompleted === 'dateCreated' ? 'Deadline' : 'Date Created'}</Button>
-                </Dropdown>
-            </div>
-
-            {viewMode === 'card' ? (
-                <Row gutter={[16, 16]}>
-                    {completedFiles.map(file => renderFileCard(file))}
-                </Row>
-            ) : (
-                <List dataSource={completedFiles} renderItem={renderFileList} />
-            )}
         </div>
     );
 };
