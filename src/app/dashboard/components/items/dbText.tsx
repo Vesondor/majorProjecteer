@@ -78,7 +78,6 @@ const TextContent: React.FC<TextContentProps> = ({ fileId, initialText, onBackBu
             <div className="translated-text" dangerouslySetInnerHTML={{ __html: translatedText }} /> {/* Update this to show the actual translated text */}
           </div>
         </div>
-        <div style={{ width: '2px', backgroundColor: '#ccc', marginRight: '20px' }} className="divider" />
         <div className="translation-editor-section" style={{ flex: 1, overflow: 'auto' }}>
           <h4>Text Editor</h4>
           <ReactQuill theme="snow" value={text} onChange={handleChange} modules={modules} style={{ height: '100%', overflow: 'auto' }} />
