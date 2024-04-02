@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import axios from 'axios';
 import { Card, Row, Col, Dropdown, Menu, Typography, Button, List, Input, Divider } from 'antd';
 import { MoreOutlined, AppstoreOutlined, UnorderedListOutlined, SearchOutlined, FileTextOutlined, CheckCircleOutlined, SortAscendingOutlined } from '@ant-design/icons';
 
@@ -17,25 +18,24 @@ interface File {
 
 const HomeContent: React.FC = () => {
     const [viewMode, setViewMode] = useState<'card' | 'list'>('card');
-
-
-    const [files, setFiles] = useState<File[]>([
-        { id: 1, name: 'របបផ្អាក ការអនុវត្ត', content: 'មានរបបផ្អាកការអនុវត្តដោយការដាក់ពាក្យបណ្តឹងទាមទារឱ្យ ជំនុំជម្រះសាជាថ្មី។ នេះគឺជារបបផ្អាក ការអនុវត្តមួយរយៈពេល ក្នុងករណីដែលមាន ការដាក់ពាក្យបណ្តឹង ទាមទារឱ្យជំនុំជម្រះសាជាថ្មី រហូតដល់  ពេលបានទទួលលទ្ធផល នៃការដាក់ពាក្យបណ្តឹងនោះ។ ពេលមានសាលក្រម ឬសាលដីកាចូលជាស្ថាពរហើយ តាម ធម្មតា គេអាចអនុវត្តដោយបង្ខំហើយ។ ហេតុនេះ ការសុំផ្អាក ការអនុវត្តនោះ តម្រូវឱ្យមានល័ក្ខខ័ណ្ឌតឹងរ៉ឹងណាស់។', timestamp: '2 hours ago', dateCreated: '2024-02-14', deadline: '2024-02-22' },
-
-        { id: 2, name: 'ដើមបណ្តឹងនៃការជំនុំជម្រះសាជាថ្មី', content: 'ការអះអាងរបស់ដើមបណ្តឹងនៃការជំនុំជម្រះសាជាថ្មី ត្រូវតែហាក់ដូចជា មានមូលហេតុណាមួយដែលមានចែងក្នុងចំណុចណាមួយនៃមូលហេតុ នៃការជំនុំជម្រះសាជាថ្មី(មាត្រា307 កថាខណ្ឌទី1)។ បើសិនជាអង្គហេតុដែលអះអាងដោយដើមបណ្តឹងនៃការជំនុំជម្រះសា ជាថ្មីមិនត្រូវនឹងមូលហេតុណាមួយនៃការជំនុំជម្រះសាជាថ្មីទេ គឺមិនស្រប នឹងល័ក្ខខ័ណ្ឌនេះទេ។', timestamp: '1 day ago', dateCreated: '2024-02-13', deadline: '2024-02-10' },
-    ]);
-
-    const [completedFiles, setCompletedFiles] = useState<File[]>([
-        { id: 3, name: 'របបផ្អាក ការអនុវត្ត', content: 'មានរបបផ្អាកការអនុវត្តដោយការដាក់ពាក្យបណ្តឹងទាមទារឱ្យ ជំនុំជម្រះសាជាថ្មី។ នេះគឺជារបបផ្អាក ការអនុវត្តមួយរយៈពេល ក្នុងករណីដែលមាន ការដាក់ពាក្យបណ្តឹង ទាមទារឱ្យជំនុំជម្រះសាជាថ្មី រហូតដល់  ពេលបានទទួលលទ្ធផល នៃការដាក់ពាក្យបណ្តឹងនោះ។ ពេលមានសាលក្រម ឬសាលដីកាចូលជាស្ថាពរហើយ តាម ធម្មតា គេអាចអនុវត្តដោយបង្ខំហើយ។ ហេតុនេះ ការសុំផ្អាក ការអនុវត្តនោះ តម្រូវឱ្យមានល័ក្ខខ័ណ្ឌតឹងរ៉ឹងណាស់។', timestamp: '2 hours ago', dateCreated: '2024-02-14', deadline: '2024-02-22' },
-
-        { id: 4, name: 'ដើមបណ្តឹងនៃការជំនុំជម្រះសាជាថ្មី', content: 'ការអះអាងរបស់ដើមបណ្តឹងនៃការជំនុំជម្រះសាជាថ្មី ត្រូវតែហាក់ដូចជា មានមូលហេតុណាមួយដែលមានចែងក្នុងចំណុចណាមួយនៃមូលហេតុ នៃការជំនុំជម្រះសាជាថ្មី(មាត្រា307 កថាខណ្ឌទី1)។ បើសិនជាអង្គហេតុដែលអះអាងដោយដើមបណ្តឹងនៃការជំនុំជម្រះសា ជាថ្មីមិនត្រូវនឹងមូលហេតុណាមួយនៃការជំនុំជម្រះសាជាថ្មីទេ គឺមិនស្រប នឹងល័ក្ខខ័ណ្ឌនេះទេ។', timestamp: '1 day ago', dateCreated: '2024-02-13', deadline: '2024-02-10' },
-
-        { id: 5, name: 'ការជំនុំជម្រះសាជាថ្មី', content: 'ការជំនុំជម្រះសាជាថ្មី គេមិនងាយទទួលស្គាល់ស្រួលៗទេ។ មានតែករណីយ៉ាងពិសេសតិចតួចណាស់ ដែលតុលាការទទួលស្គាល់។ ហេតុនេះហើយ ការផ្អាកការអនុវត្តដោយសារបណ្ដឹង ទាមទារឱ្យជំនុំជម្រះសាជាថ្មីក៏អាចទទួលស្គាល់បានតែក្នុង ករណីពិសេសណាស់ប៉ុណ្ណោះ។', timestamp: '2 hours ago', dateCreated: '2024-02-14', deadline: '2024-02-03' },
-        // Add more completed files as needed
-    ]);
-
+    const [files, setFiles] = useState<File[]>([]);
+    const [completedFiles, setCompletedFiles] = useState<File[]>([]);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [showTextContent, setShowTextContent] = useState(false);
+
+    useEffect(() => {
+        const fetchDocuments = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/api/documents');
+                setFiles(response.data);
+            } catch (error) {
+                console.error('Error fetching documents:', error);
+                alert('Error fetching documents');
+            }
+        };
+        fetchDocuments();
+    }, []);
+
 
     const [sortCriterionRecent, setSortCriterionRecent] = useState<'dateCreated' | 'deadline'>('dateCreated');
     const [sortCriterionCompleted, setSortCriterionCompleted] = useState<'dateCreated' | 'deadline'>('dateCreated');
@@ -59,13 +59,16 @@ const HomeContent: React.FC = () => {
         setSortCriterionCompleted(prevCriterion => prevCriterion === 'dateCreated' ? 'deadline' : 'dateCreated');
     };
 
-    useEffect(() => {
-        setFiles(sortFiles(files, sortCriterionRecent));
-    }, [sortCriterionRecent, files]);
+    const sortedFiles = useMemo(() => {
+        return sortFiles(files, sortCriterionRecent);
+    }, [files, sortCriterionRecent]);
 
-    useEffect(() => {
-        setCompletedFiles(sortFiles(completedFiles, sortCriterionCompleted));
-    }, [sortCriterionCompleted, completedFiles]);
+    const sortedCompletedFiles = useMemo(() => {
+        return sortFiles(completedFiles, sortCriterionCompleted);
+    }, [completedFiles, sortCriterionCompleted]);
+
+
+
 
     const handleFileClick = (file: File) => {
         setSelectedFile(file);
@@ -77,26 +80,12 @@ const HomeContent: React.FC = () => {
         setSelectedFile(null);
     };
 
-    const handleRename = () => {/* Rename logic */ };
-    const handleRemove = () => {/* Remove logic */ };
-    const handleShare = () => {/* Share logic */ };
-
-    const filteredFiles = files.filter(file =>
-        file.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const handleShare = () => { };
 
     const filteredCompletedFiles = completedFiles.filter(file =>
-        file.name.toLowerCase().includes(searchQuery.toLowerCase())
+        file.name ? file.name.toLowerCase().includes(searchQuery.toLowerCase()) : false
     );
 
-
-    const handleSortByRecent = (criteria: 'dateCreated' | 'deadline') => {
-        setSortCriterionRecent(criteria);
-    };
-
-    const handleSortByCompleted = (criteria: 'dateCreated' | 'deadline') => {
-        setSortCriterionCompleted(criteria);
-    };
 
     const renderFileCard = (file: File) => (
         <Col key={file.id} xs={24} sm={12} md={12} lg={6}>
@@ -140,7 +129,7 @@ const HomeContent: React.FC = () => {
                 cursor: 'pointer',
                 transition: 'background-color 0.3s',
             }}
-            className="hoverable-list-item" // Assuming you have defined this class in your CSS
+            className="hoverable-list-item"
         >
             <List.Item.Meta
                 title={<div>{file.name}</div>}
@@ -161,14 +150,12 @@ const HomeContent: React.FC = () => {
     return (
         <div style={{
             backgroundColor: '#214B71', paddingTop: '10px', paddingBottom: '20px', paddingLeft: '20px', paddingRight: '20px',
-            width: '100%', boxSizing: 'border-box'
+            width: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', minHeight: '100vh' // This ensures the blue background takes the full height
         }}>
             <div className="container mx-auto mt-8" style={{
                 backgroundColor: 'white', borderRadius: '10px', padding: '20px',
-                margin: '0 auto', width: '100%', boxSizing: 'border-box', maxWidth: '100%'
+                margin: '0 auto', width: '100%', boxSizing: 'border-box', maxWidth: '100%', flex: '1' // flex: 1 will make sure this container expands
             }}>
-
-                {/* App Name and Search Bar */}
                 <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <AppstoreOutlined style={{ fontSize: '24px', color: '#214B71', marginRight: '8px' }} />
@@ -190,18 +177,16 @@ const HomeContent: React.FC = () => {
                 </div>
 
                 <Divider style={{ margin: '20px 0' }} />
-
-                {/* Recent Documents Section */}
                 <div>
                     <Title level={3} style={{ color: '#214B71' }}>
                         <FileTextOutlined /> Recent Documents
                     </Title>
                     {viewMode === 'card' ? (
                         <Row gutter={[16, 16]}>
-                            {filteredFiles.map(file => renderFileCard(file))}
+                            {files.map(file => renderFileCard(file))}
                         </Row>
                     ) : (
-                        <List dataSource={filteredFiles} renderItem={renderFileList} />
+                        <List dataSource={files} renderItem={renderFileList} />
                     )}
                 </div>
 
