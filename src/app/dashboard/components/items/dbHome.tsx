@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { Card, Row, Col, Dropdown, Menu, Typography, Button, List, Input, Divider } from 'antd';
-import { MoreOutlined, AppstoreOutlined, UnorderedListOutlined, SearchOutlined, FileTextOutlined, CheckCircleOutlined, SortAscendingOutlined } from '@ant-design/icons';
+import { MoreOutlined, AppstoreOutlined, UnorderedListOutlined, SearchOutlined, FileTextOutlined, CheckCircleOutlined } from '@ant-design/icons';
 
 import TextContent from './dbText';
 import '../../../../styles/app.css';
@@ -9,11 +9,14 @@ const { Text, Title } = Typography;
 
 interface File {
     id: number;
-    name: string;
+    title: string;
     content: string;
+    translatedContent: string;
     timestamp: string;
     dateCreated: string;
+    documentStyle: JSON;
     deadline: string;
+    status: number;
 }
 
 const HomeContent: React.FC = () => {
@@ -22,53 +25,47 @@ const HomeContent: React.FC = () => {
     const [completedFiles, setCompletedFiles] = useState<File[]>([]);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [showTextContent, setShowTextContent] = useState(false);
-
-    useEffect(() => {
-        const fetchDocuments = async () => {
-            try {
-                const response = await axios.get('http://localhost:3001/api/documents');
-                setFiles(response.data);
-            } catch (error) {
-                console.error('Error fetching documents:', error);
-                alert('Error fetching documents');
-            }
-        };
-        fetchDocuments();
-    }, []);
-
-
-    const [sortCriterionRecent, setSortCriterionRecent] = useState<'dateCreated' | 'deadline'>('dateCreated');
-    const [sortCriterionCompleted, setSortCriterionCompleted] = useState<'dateCreated' | 'deadline'>('dateCreated');
+    const [refreshData, setRefreshData] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
+    const fetchDocuments = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/api/documents');
+            const formattedFiles = response.data.map((file: any) => ({
+                id: file.documentId,
+                title: file.documentName,
+                content: file.documentStyle.ops.map((op: any) => op.insert).join('').trim(),
+                translatedContent: file.documentTranslated,
+                timestamp: new Date(file.timestamp).toLocaleString(),
+                dateCreated: new Date(file.dateCreated).toLocaleString(),
+                documentStyle: file.documentStyle,
+                deadline: new Date(file.deadline).toLocaleString(),
+                status: file.status
+            }));
+            const filesToSet: File[] = [];
+            const completedFilesToSet: File[] = [];
+            formattedFiles.forEach((formattedFile: File) => {
+                if (formattedFile.status === 0) {
+                    filesToSet.push(formattedFile);
+                } else if (formattedFile.status === 1) {
+                    completedFilesToSet.push(formattedFile);
+                }
+            });
+            setFiles(filesToSet);
+            setCompletedFiles(completedFilesToSet);
+        } catch (error) {
+            console.error('Error fetching documents:', error);
+            alert('Error fetching documents');
+        }
+    };
+
+    useEffect(() => {
+        fetchDocuments();
+    }, [refreshData]);
 
     const toggleViewMode = () => {
         setViewMode(prevMode => (prevMode === 'card' ? 'list' : 'card'));
     };
-
-
-    const sortFiles = (filesArray: File[], criterion: 'dateCreated' | 'deadline') => {
-        return [...filesArray].sort((a, b) => new Date(a[criterion]).getTime() - new Date(b[criterion]).getTime());
-    };
-
-    const toggleSortCriterionRecent = () => {
-        setSortCriterionRecent(prevCriterion => prevCriterion === 'dateCreated' ? 'deadline' : 'dateCreated');
-    };
-
-    const toggleSortCriterionCompleted = () => {
-        setSortCriterionCompleted(prevCriterion => prevCriterion === 'dateCreated' ? 'deadline' : 'dateCreated');
-    };
-
-    const sortedFiles = useMemo(() => {
-        return sortFiles(files, sortCriterionRecent);
-    }, [files, sortCriterionRecent]);
-
-    const sortedCompletedFiles = useMemo(() => {
-        return sortFiles(completedFiles, sortCriterionCompleted);
-    }, [completedFiles, sortCriterionCompleted]);
-
-
-
 
     const handleFileClick = (file: File) => {
         setSelectedFile(file);
@@ -78,19 +75,20 @@ const HomeContent: React.FC = () => {
     const handleBackButtonClick = () => {
         setShowTextContent(false);
         setSelectedFile(null);
+        setRefreshData(prev => !prev);
     };
 
     const handleShare = () => { };
 
     const filteredCompletedFiles = completedFiles.filter(file =>
-        file.name ? file.name.toLowerCase().includes(searchQuery.toLowerCase()) : false
+        file.title ? file.title.toLowerCase().includes(searchQuery.toLowerCase()) : false
     );
 
 
     const renderFileCard = (file: File) => (
         <Col key={file.id} xs={24} sm={12} md={12} lg={6}>
             <div>
-                <p className="text-lg font-semibold">{file.name}</p>
+                <p className="text-lg font-semibold">{file.title}</p>
                 <Card
                     hoverable
                     onClick={() => handleFileClick(file)}
@@ -132,7 +130,7 @@ const HomeContent: React.FC = () => {
             className="hoverable-list-item"
         >
             <List.Item.Meta
-                title={<div>{file.name}</div>}
+                title={<div>{file.title}</div>}
                 description={
                     <div>
                         <div>Date Created: {file.dateCreated}</div>
@@ -145,16 +143,16 @@ const HomeContent: React.FC = () => {
 
 
     if (showTextContent && selectedFile) {
-        return <TextContent fileId={selectedFile.id} initialText={selectedFile.content} onBackButtonClick={handleBackButtonClick} />;
+        return <TextContent fileId={selectedFile.id} initTranslateText={selectedFile.translatedContent} initText={selectedFile.content} onBackButtonClick={handleBackButtonClick} />;
     }
     return (
         <div style={{
             backgroundColor: '#214B71', paddingTop: '10px', paddingBottom: '20px', paddingLeft: '20px', paddingRight: '20px',
-            width: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', minHeight: '100vh' // This ensures the blue background takes the full height
+            width: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', minHeight: '100vh'
         }}>
             <div className="container mx-auto mt-8" style={{
                 backgroundColor: 'white', borderRadius: '10px', padding: '20px',
-                margin: '0 auto', width: '100%', boxSizing: 'border-box', maxWidth: '100%', flex: '1' // flex: 1 will make sure this container expands
+                margin: '0 auto', width: '100%', boxSizing: 'border-box', maxWidth: '100%', flex: '1'
             }}>
                 <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -192,7 +190,6 @@ const HomeContent: React.FC = () => {
 
                 <Divider style={{ margin: '40px 0' }} />
 
-                {/* Completed Documents Section */}
                 <div>
                     <Title level={3} style={{ color: '#214B71' }}>
                         <CheckCircleOutlined /> Completed Documents

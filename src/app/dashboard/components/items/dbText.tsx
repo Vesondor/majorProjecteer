@@ -1,33 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { Button } from 'antd';
+import axios from 'axios';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import 'react-quill/dist/quill.snow.css'; // Import ReactQuill styling
+import 'react-quill/dist/quill.snow.css';
 
-// Dynamically import ReactQuill for client-side rendering
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 interface TextContentProps {
-  fileId: number; // Unique identifier for each file
-  initialText: string;
+  fileId: number;
+  initText: string;
+  initTranslateText: string;
   onBackButtonClick: () => void;
 }
 
-const TextContent: React.FC<TextContentProps> = ({ fileId, initialText, onBackButtonClick }) => {
-  const [text, setText] = useState('');
+const TextContent: React.FC<TextContentProps> = ({ fileId, initText, initTranslateText, onBackButtonClick }) => {
+  const [text, setText] = useState(initText);
+  const [translatedText, setTranslateText] = useState(initTranslateText)
 
   useEffect(() => {
-    // Try to retrieve saved text for this fileId
-    const savedText = localStorage.getItem(`savedText_${fileId}`);
-    if (savedText) {
-      setText(savedText);
-    } else {
-      setText(initialText);
-    }
-  }, [fileId, initialText]);
+    setText(initText);
+
+  }, [initText]);
 
   const handleChange = (content: string) => {
     setText(content);
+  };
+
+  const saveDocument = async () => {
+    try {
+
+      const cleanedText = text.replace(/<[^>]*>/g, ''); // Remove HTML tags
+      const documentStyle = JSON.stringify(cleanedText).replace(/"/g, ''); // Remove double quotes
+      const wordSpaced = documentStyle.split(' ');
+      const wordCount = wordSpaced.length;
+      const documentTranslated = translatedText;
+
+      await axios.put(`http://localhost:3001/api/documents/${fileId}`, {
+        documentStyle,
+        wordCount,
+        documentTranslated,
+      });
+
+      console.log('Document saved to server');
+    } catch (error: any) {
+      console.error('Error saving document:', error.message);
+    }
+  };
+  const handleSave = () => {
+    saveDocument();
   };
 
   const modules = {
@@ -44,14 +65,11 @@ const TextContent: React.FC<TextContentProps> = ({ fileId, initialText, onBackBu
     ],
   };
 
-  const translatedText = "The plaintiff's assertion of a retrial must appear to have been substantiated by any of the reasons given at the point of the retrial (Article 307, paragraph 1). If the facts stated by the plaintiffs of the retrial do not match any of the reasons for the retrial, it is inconsistent with this condition.";
-
   useEffect(() => {
     const saveText = (event: any) => {
       if ((event.metaKey || event.ctrlKey) && event.key === 's') {
-        event.preventDefault(); // Prevent the default save dialog
-        localStorage.setItem(`savedText_${fileId}`, text); // Save the current text to localStorage with unique key
-        console.log('Text saved to localStorage');
+        event.preventDefault();
+        handleSave();
       }
     };
 
@@ -71,11 +89,11 @@ const TextContent: React.FC<TextContentProps> = ({ fileId, initialText, onBackBu
         <div className="original-text-section" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'auto', marginRight: '10px' }}>
           <div className="upper-text-section" style={{ flex: 1, overflow: 'auto' }}>
             <h4>Original Text</h4>
-            <div className="original-text" dangerouslySetInnerHTML={{ __html: initialText }} />
+            <div className="original-text" dangerouslySetInnerHTML={{ __html: initText }} />
           </div>
           <div className="lower-text-section" style={{ flex: 1, marginTop: '20px', overflow: 'auto' }}>
             <h4>Machine Translation</h4>
-            <div className="translated-text" dangerouslySetInnerHTML={{ __html: translatedText }} /> {/* Update this to show the actual translated text */}
+            <div className="translated-text" dangerouslySetInnerHTML={{ __html: initTranslateText }} />
           </div>
         </div>
         <div className="translation-editor-section" style={{ flex: 1, overflow: 'auto' }}>
@@ -85,7 +103,6 @@ const TextContent: React.FC<TextContentProps> = ({ fileId, initialText, onBackBu
       </div>
     </div>
   );
-  
 };
 
 export default TextContent;
