@@ -1,121 +1,143 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Avatar } from 'antd';
-import { FaUser } from 'react-icons/fa';
-
-const { Meta } = Card;
-
-// Define types for TypeScript (optional)
-interface Contact {
-  id: number;
-  name: string;
-  username: string;
-}
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import { UserOutlined } from '@ant-design/icons';
+import TextArea from 'antd/es/input/TextArea';
+import { Button } from 'antd';
+import { motion } from "framer-motion";
 
 interface Message {
-  id: number;
-  sender: number; // Consider using 'senderId' for clarity
-  content: string;
-  contactId: number; // The recipient's ID
+  messageId: number;
+  senderId: number;
+  receiverId: number;
+  text: string;
+  createdAt: string;
+  senderUsername: string;
+  receiverUsername: string;
 }
 
+const CURRENT_USER_ID = 4; // Change this ID to test with different users
+
+const fetchMessages = async (): Promise<Message[]> => {
+  try {
+    const response = await axios.get<Message[]>(`http://localhost:3001/api/messages/${CURRENT_USER_ID}`);
+    return response.data.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  } catch (error: any) {
+    alert('Error fetching messages: ' + (error.response?.data || error));
+    throw error;
+  }
+};
+
+const createMessage = async (receiverId: number, text: string) => {
+  try {
+    await axios.post('http://localhost:3001/api/messages', { senderId: CURRENT_USER_ID, receiverId, text });
+  } catch (error: any) {
+    console.error('Error creating message:', error.message);
+    throw error;
+  }
+};
+
 const MessageContent: React.FC = () => {
-  const [contacts, setContacts] = useState<Contact[]>([
-    { id: 1, name: 'Sunkheang', username: '@bonglee' },
-    { id: 2, name: 'Vathnak', username: '@ericvk' },
-    { id: 3, name: 'Smey', username: '@vesondor' },
-  ]);
-
-  // Automatically select the first contact if it exists
-  const [selectedContact, setSelectedContact] = useState<number | null>(contacts.length > 0 ? contacts[0].id : null);
-
-  const [messages, setMessages] = useState<Message[]>(() => {
-    const storedMessages = localStorage.getItem('messages');
-    return storedMessages ? JSON.parse(storedMessages) : [];
-  });
-
-  const [text, setText] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [selectedUser, setSelectedUser] = useState<number | null>(null);
+  const [newMessage, setNewMessage] = useState<string>('');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    localStorage.setItem('messages', JSON.stringify(messages));
+    fetchMessages().then(setMessages);
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
   }, [messages]);
 
-  const handleContactClick = (contactId: number) => {
-    setSelectedContact(contactId);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleSendMessage = () => {
-    if (!selectedContact || text.trim() === '') return;
-
-    const newMessage: Message = {
-      id: Date.now(),
-      sender: 0, // Assuming '0' is the user's ID
-      content: text,
-      contactId: selectedContact,
-    };
-
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-    setText('');
+  const handleUserSelection = (userId: number) => {
+    setSelectedUser(userId);
   };
+
+  const sendMessage = async () => {
+    if (!selectedUser || !newMessage) return;
+    await createMessage(selectedUser, newMessage);
+    setNewMessage('');
+    fetchMessages().then(setMessages);
+  };
+
+  // Determine unique users for the sidebar
+  const uniqueUsers = messages.reduce((acc: Record<number, Message>, message: Message) => {
+    const otherUserId = message.senderId === CURRENT_USER_ID ? message.receiverId : message.senderId;
+    if (!acc[otherUserId]) {
+      acc[otherUserId] = message;
+    }
+    return acc;
+  }, {});
 
   return (
-    <div style={{ padding: '20px', backgroundColor: '#214B71', minHeight: '100vh', boxSizing: 'border-box' }}>
-      <div className="flex" style={{ backgroundColor: 'white', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', minHeight: '95vh'}}>
-        <div className="w-1/5 p-4">
-          <div className="text-xl font-bold mb-4">Contacts</div>
-          {contacts.map((contact) => (
-            <Card
-              key={contact.id}
-              style={{ marginBottom: 10 }}
-              hoverable
-              onClick={() => handleContactClick(contact.id)}
-              className={`${selectedContact === contact.id ? 'bg-blue-100' : ''}`}
-            >
-              <Meta avatar={<Avatar icon={<FaUser />} />} title={contact.name} description={contact.username} />
-            </Card>
-          ))}
-        </div>
+    <div className="flex h-screen">
+      <div className={`w-1/6 bg-white border-r flex-shrink-0 shadow-lg ${isSidebarOpen ? 'block' : 'hidden'}`}>
+        {/* Sidebar content */}
+        <div className="p-2">
+          <h3 className="text-lg font-semibold text-center border-b pb-2">Contacts</h3>
+          {Object.values(uniqueUsers).map((user) => {
+            const isActive = user.senderId === selectedUser || user.receiverId === selectedUser;
+            const truncatedName = user.senderId === CURRENT_USER_ID ? user.receiverUsername : user.senderUsername;
 
-        <div className="flex-1 p-4 flex flex-col">
-          <div className="text-xl font-bold mb-4">Chat</div>
-          <div className="flex flex-col flex-1">
-            <div className="overflow-auto mb-4">
-              {selectedContact !== null ? (
-                messages
-                  .filter((message) => message.contactId === selectedContact || message.sender === selectedContact)
-                  .map((message) => (
-                    <div key={message.id} className={`my-2 flex ${message.sender === 0 ? 'justify-end' : 'justify-start'}`}>
-                      <div
-                        className={`p-3 rounded-lg ${message.sender === 0 ? 'bg-blue-200 text-right' : 'bg-gray-200 text-left'}`}
-                        style={{ maxWidth: '70%' }}
-                      >
-                        <span>{message.content}</span>
+            return (
+              <div key={user.messageId}
+                onClick={() => handleUserSelection(user.senderId === CURRENT_USER_ID ? user.receiverId : user.senderId)}
+                className={`flex items-center p-2 cursor-pointer rounded-lg m-1 ${isActive ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200'} transition duration-150 ease-in-out break-words`}
+              >
+                <UserOutlined className={`mr-2 ${isActive ? 'text-white' : 'text-gray-600'} text-xl`} />
+                <span className={`font-medium ${isActive ? 'text-white' : 'text-gray-900'}`} style={{ wordWrap: "break-word" }}>
+                  {truncatedName}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+
+
+
+      <div className="flex flex-col flex-grow p-4 bg-gray-100">
+        {selectedUser && (
+          <>
+            {/* Message display area */}
+            <div className="flex-grow overflow-y-auto">
+              {messages
+                .filter((message) => (message.senderId === selectedUser && message.receiverId === CURRENT_USER_ID) || (message.senderId === CURRENT_USER_ID && message.receiverId === selectedUser))
+                .map((message) => (
+                  <div key={message.messageId} className={`flex mb-4 ${message.senderId === CURRENT_USER_ID ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-3/4 p-3 rounded-lg shadow ${message.senderId === CURRENT_USER_ID ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`} style={{ maxWidth: '75%' }}>
+                      <span>{message.text}</span>
+                      <div className="text-xs mt-2">
+                        {message.senderId === CURRENT_USER_ID ? 'You' : message.senderUsername} - {new Date(message.createdAt).toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                       </div>
                     </div>
-                  ))
-              ) : (
-                <div className="text-gray-500">Please select a contact to start a conversation.</div>
-              )}
+                  </div>
+                ))}
+              <div ref={messagesEndRef} />
             </div>
-            <div className="mt-auto">
-              <div className="flex items-center">
-                <input
-                  type="text"
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  placeholder="Type your message..."
-                  className="flex-1 p-3 border rounded-lg"
-                />
-                <button
-                  onClick={handleSendMessage}
-                  className="bg-blue-500 text-white p-3 ml-3 rounded-lg hover:bg-blue-600"
-                  disabled={!selectedContact}
-                >
-                  Send
-                </button>
-              </div>
+
+            {/* Message input area */}
+            <div className="py-4 flex items-center">
+              <TextArea
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                autoSize={{ minRows: 1, maxRows: 4 }}
+                placeholder="Type a message..."
+                className="flex-grow mr-2"
+              />
+              <Button type="primary" className='bg-blue-500' onClick={sendMessage}>
+                Send
+              </Button>
             </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );
