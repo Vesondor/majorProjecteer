@@ -28,13 +28,14 @@ const Login: React.FC = () => {
     // Check if the login was successful and handle redirection based on the user's role
     if (data.loggedIn) {
       localStorage.setItem('token', data.token); // Store the token for future requests
-      localStorage.setItem('userId', data.userId.toString()); // Store the userId as a string for future use
-  
+
       switch(data.role) {
         case 'translator':
+          localStorage.setItem('translatorId', data.userId.toString()); // Store the userId as a string for future use
           router.push('/dashboard');
           break;
         case 'manager':
+          localStorage.setItem('adminId', data.userId.toString()); // Store the userId as a string for future use
           router.push('/adminboard');
           break;
         default:

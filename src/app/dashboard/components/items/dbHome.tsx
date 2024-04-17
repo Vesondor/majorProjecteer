@@ -22,11 +22,10 @@ const HomeContent: React.FC = () => {
     const [showTextContent, setShowTextContent] = useState(false);
     const [refreshData, setRefreshData] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [editableTitle, setEditableTitle] = useState<string | null>(null);
 
     const getUserId = () => {
-        if (typeof window !== 'undefined' && localStorage.getItem('userId')) {
-            return localStorage.getItem('userId');
+        if (typeof window !== 'undefined' && localStorage.getItem('translatorId')) {
+            return localStorage.getItem('translatorId');
         }
         return null;
     };

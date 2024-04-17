@@ -119,3 +119,13 @@ export type TextContentProps = {
   initTranslateText: string;
   onBackButtonClick: () => void;
 }
+
+export type Message = {
+  messageId: number;
+  senderId: number;
+  receiverId: number;
+  text: string;
+  createdAt: string;
+  senderUsername: string;
+  receiverUsername: string;
+}

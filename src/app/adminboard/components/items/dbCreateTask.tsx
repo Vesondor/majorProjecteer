@@ -83,6 +83,7 @@ const CreateTaskPage: React.FC = () => {
             const data = await response.json();
 
             // Process OCR text right here
+            alert(JSON.stringify(values))
             const cleanedText = data.text.replace(/<[^>]*>/g, '') ?? '';
             const docStyle = JSON.stringify(cleanedText).replace(/"/g, '');
             setOcrText(data.text); // Update state, but use local 'cleanedText' for immediate processing
@@ -92,7 +93,7 @@ const CreateTaskPage: React.FC = () => {
               taskName: values.title,
               context: values.context,
               message: values.message,
-              documentName: fileList[0].name,
+              documentName: values.title,
               documentTranslated: "",
               documentStyle: docStyle,
               language: 'en',
@@ -125,7 +126,7 @@ const CreateTaskPage: React.FC = () => {
     if (!taskDetails) return;
 
     try {
-      const currentUserId = localStorage.getItem('userId') ? parseInt(localStorage.getItem('userId')!) : null;
+      const currentUserId = localStorage.getItem('adminId') ? parseInt(localStorage.getItem('adminId')!) : null;
       if (currentUserId) {
         const response = await fetch('http://localhost:3001/api/tasks', {
           method: 'POST',

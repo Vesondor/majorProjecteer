@@ -10,7 +10,7 @@ const InboxContent: React.FC = () => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [displayCompleted, setDisplayCompleted] = useState(false);
 
-  const currentUser = localStorage.getItem('userId') ? parseInt(localStorage.getItem('userId')!) : null;
+  const currentUser = localStorage.getItem('translatorId') ? parseInt(localStorage.getItem('translatorId')!) : null;
   
   const fetchTasks = async () => {
     try {

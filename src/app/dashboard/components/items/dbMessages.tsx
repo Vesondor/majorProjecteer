@@ -3,17 +3,8 @@ import axios from 'axios';
 import { UserOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { Button } from 'antd';
-import { motion } from "framer-motion";
+import { Message } from '@/types';
 
-interface Message {
-  messageId: number;
-  senderId: number;
-  receiverId: number;
-  text: string;
-  createdAt: string;
-  senderUsername: string;
-  receiverUsername: string;
-}
 
 const MessageContent: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -21,7 +12,7 @@ const MessageContent: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [newMessage, setNewMessage] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const currentUserId = localStorage.getItem('userId') ? parseInt(localStorage.getItem('userId')!) : null;
+  const currentUserId = localStorage.getItem('translatorId') ? parseInt(localStorage.getItem('translatorId')!) : null;
 
   useEffect(() => {
     const fetchMessages = async () => {
