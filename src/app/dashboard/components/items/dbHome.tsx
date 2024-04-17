@@ -1,97 +1,149 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import { Card, Row, Col, Dropdown, Menu, Typography, Button, List, Input, Divider } from 'antd';
 import { MoreOutlined, AppstoreOutlined, UnorderedListOutlined, SearchOutlined, FileTextOutlined, CheckCircleOutlined } from '@ant-design/icons';
-
+import { File, Task, DocumentStyle, Op } from '@/types';
 import TextContent from './dbText';
 import '../../../../styles/app.css';
 const { Text, Title } = Typography;
 
-interface File {
-    id: number;
-    title: string;
-    content: string;
-    translatedContent: string;
-    timestamp: string;
-    dateCreated: string;
-    documentStyle: JSON;
-    deadline: string;
-    status: number;
-}
+function hasToken() {
+    // Checks for 'token' in localStorage
+    return Boolean(localStorage.getItem('token'));
+  }
 
 const HomeContent: React.FC = () => {
+    const router = useRouter();
     const [viewMode, setViewMode] = useState<'card' | 'list'>('card');
-    const [files, setFiles] = useState<File[]>([]);
-    const [completedFiles, setCompletedFiles] = useState<File[]>([]);
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [tasks, setTasks] = useState<Task[]>([]);
+    const [completedTasks, setCompletedTasks] = useState<Task[]>([]);
+    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
     const [showTextContent, setShowTextContent] = useState(false);
     const [refreshData, setRefreshData] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [editableTitle, setEditableTitle] = useState<string | null>(null);
 
-    const fetchDocuments = async () => {
+    const getUserId = () => {
+        if (typeof window !== 'undefined' && localStorage.getItem('userId')) {
+            return localStorage.getItem('userId');
+        }
+        return null;
+    };
+
+    const userId = getUserId();
+
+
+    const fetchTasks = async () => {
         try {
-            const response = await axios.get('http://localhost:3001/api/documents');
-            const formattedFiles = response.data.map((file: any) => ({
-                id: file.documentId,
-                title: file.documentName,
-                content: file.documentStyle.ops.map((op: any) => op.insert).join('').trim(),
-                translatedContent: file.documentTranslated,
-                timestamp: new Date(file.timestamp).toLocaleString(),
-                dateCreated: new Date(file.dateCreated).toLocaleString(),
-                documentStyle: file.documentStyle,
-                deadline: new Date(file.deadline).toLocaleString(),
-                status: file.status
+            const response = await axios.get(`http://localhost:3001/api/tasks/${userId}`);
+            const formattedTasks: Task[] = response.data.task_tbl.map((task: any) => ({
+                id: task.taskId,
+                taskName: task.taskName,
+                assignorId: task.assignorId,
+                receiverId: task.receiverId,
+                documentId: task.documentId,
+                context: task.context,
+                message: task.message,
+                dateCreated: new Date(task.dateCreated).toLocaleString('km-KH', {
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                }),
+                dateClosed: task.dateClosed ? new Date(task.dateClosed).toLocaleString('km-KH', {
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                }) : null,
+                projectId: task.projectId,
+                document: {
+                    id: task.document.documentId,
+                    title: task.document.documentName,
+                    translatedContent: task.document.documentTranslated,
+                    dateCreated: new Date(task.document.dateCreated).toLocaleString('km-KH', {
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                    }),
+                    documentStyle: task.document.documentStyle,
+                    deadline: new Date(task.document.deadline).toLocaleString('km-KH', {
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                    }),
+                    status: task.document.status,
+                },
+                assignor: {
+                    username: task.assignor.username,
+                    role: task.assignor.role,
+                },
+                receiver: {
+                    username: task.receiver.username,
+                    role: task.receiver.role,
+                },
             }));
-            const filesToSet: File[] = [];
-            const completedFilesToSet: File[] = [];
-            formattedFiles.forEach((formattedFile: File) => {
-                if (formattedFile.status === 0) {
-                    filesToSet.push(formattedFile);
-                } else if (formattedFile.status === 1) {
-                    completedFilesToSet.push(formattedFile);
+
+            const tasksToSet: Task[] = [];
+            const completedTasksToSet: Task[] = [];
+            formattedTasks.forEach((formattedTask: Task) => {
+                if (formattedTask.document.status === 0) {
+                    tasksToSet.push(formattedTask);
+                } else if (formattedTask.document.status === 1) {
+                    completedTasksToSet.push(formattedTask);
                 }
             });
-            setFiles(filesToSet);
-            setCompletedFiles(completedFilesToSet);
+            setTasks(tasksToSet);
+            setCompletedTasks(completedTasksToSet);
         } catch (error) {
-            console.error('Error fetching documents:', error);
-            alert('Error fetching documents');
+            console.error('Error fetching tasks:', error);
+            alert('Error fetching tasks');
         }
     };
 
     useEffect(() => {
-        fetchDocuments();
-    }, [refreshData]);
-
+        // Check for token before fetching tasks
+        if (hasToken()) {
+            fetchTasks();
+        }else{
+            router.push('/login'); // Redirect to login if no token
+        }
+    }, [refreshData, userId]); // Ensure dependencies are correctly listed for this effect
+    
     const toggleViewMode = () => {
         setViewMode(prevMode => (prevMode === 'card' ? 'list' : 'card'));
     };
 
-    const handleFileClick = (file: File) => {
-        setSelectedFile(file);
+    const handleTaskClick = (task: Task) => {
+        setSelectedTask(task);
         setShowTextContent(true);
     };
 
     const handleBackButtonClick = () => {
         setShowTextContent(false);
-        setSelectedFile(null);
+        setSelectedTask(null);
         setRefreshData(prev => !prev);
     };
 
     const handleShare = () => { };
 
-    const filteredCompletedFiles = completedFiles.filter(file =>
-        file.title ? file.title.toLowerCase().includes(searchQuery.toLowerCase()) : false
+    const filteredCompletedTasks = completedTasks.filter(task =>
+        task.taskName ? task.taskName.toLowerCase().includes(searchQuery.toLowerCase()) : false
     );
-
-
-    const renderFileCard = (file: File) => (
-        <Col key={file.id} xs={24} sm={12} md={12} lg={6}>
+    const renderTaskCard = (task: Task) => (
+        <Col key={task.id} xs={24} sm={12} md={12} lg={6}>
             <div>
-                <p className="text-lg font-semibold">{file.title}</p>
+                <h5>{task.document.title}</h5>
                 <Card
                     hoverable
-                    onClick={() => handleFileClick(file)}
+                    onClick={() => handleTaskClick(task)}
                     className="notebook-card"
                 >
                     <div className="line-design"></div> {/* Add line design inside the card */}
@@ -99,30 +151,30 @@ const HomeContent: React.FC = () => {
                 <div className="mt-2 flex flex-col">
                     <div className="flex items-center">
                         <Text type="secondary" style={{ marginRight: '8px', fontSize: '12px' }}>
-                            {`Date Created: ${file.dateCreated}`}
+                            {`Assigned by: ${task.assignor.username}`}
                         </Text>
-                        <Dropdown overlay={() => menu((handleShare))} trigger={['click']}>
+                        <Dropdown overlay={() => menu(handleShare, task)} trigger={['click']}>
                             <MoreOutlined style={{ fontSize: '24px' }} />
                         </Dropdown>
                     </div>
                     <Text className="text-red-700" style={{ fontSize: '12px' }}>
-                        {`Deadline: ${file.deadline}`}
+                        {`Deadline: ${task.document.deadline}`}
                     </Text>
                 </div>
             </div>
         </Col>
     );
 
-    const menu = (handleSort: (criteria: 'dateCreated' | 'deadline') => void) => (
+    const menu = (handleShare: () => void, task: Task) => (
         <Menu>
-            <Menu.Item key="dateCreated" onClick={() => handleSort('dateCreated')}>Sort by Date Created</Menu.Item>
-            <Menu.Item key="deadline" onClick={() => handleSort('deadline')}>Sort by Deadline</Menu.Item>
+            <Menu.Item key="share" onClick={handleShare}>Share</Menu.Item>
         </Menu>
     );
-    const renderFileList = (file: File) => (
+
+    const renderTaskList = (task: Task) => (
         <List.Item
-            key={file.id}
-            onClick={() => handleFileClick(file)}
+            key={task.id}
+            onClick={() => handleTaskClick(task)}
             style={{
                 cursor: 'pointer',
                 transition: 'background-color 0.3s',
@@ -130,21 +182,33 @@ const HomeContent: React.FC = () => {
             className="hoverable-list-item"
         >
             <List.Item.Meta
-                title={<div>{file.title}</div>}
+                title={<div>{task.taskName}</div>}
                 description={
                     <div>
-                        <div>Date Created: {file.dateCreated}</div>
-                        <div style={{ color: 'red' }}>Deadline: {file.deadline}</div>
+                        <div>Assigned by: {task.assignor.username}</div>
+                        <div style={{ color: 'red' }}>Deadline: {task.document.deadline}</div>
                     </div>
                 }
             />
         </List.Item>
     );
 
-
-    if (showTextContent && selectedFile) {
-        return <TextContent fileId={selectedFile.id} initTranslateText={selectedFile.translatedContent} initText={selectedFile.content} onBackButtonClick={handleBackButtonClick} />;
+    if (showTextContent && selectedTask) {
+        let formattedText = selectedTask.document.documentStyle.ops[0].insert;
+        // Check if formattedText is JSON (contains "content" key)
+        try {
+            const parsedText = JSON.parse(formattedText);
+            if (parsedText && typeof parsedText === 'object' && 'content' in parsedText) {
+                formattedText = parsedText.content; // Use the HTML content
+            }
+        } catch (error) {
+            // If it's not JSON or doesn't contain the 'content' key, use it as is (plain text or direct HTML)
+        }
+    
+        return <TextContent fileId={selectedTask.document.id} title={selectedTask.document.title} initTranslateText={selectedTask.document.translatedContent} initText={formattedText} onBackButtonClick={handleBackButtonClick} />;
     }
+    
+
     return (
         <div style={{
             backgroundColor: '#214B71', paddingTop: '10px', paddingBottom: '20px', paddingLeft: '20px', paddingRight: '20px',
@@ -165,26 +229,25 @@ const HomeContent: React.FC = () => {
                             suffix={
                                 <Button icon={<SearchOutlined />} type="primary" style={{ border: 'none', background: 'none' }} />
                             }
-                            placeholder="Search files..."
+                            placeholder="Search tasks..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             style={{ maxWidth: '400px', width: '100%', borderRadius: '20px', padding: '0 12px' }}
                         />
                     </div>
-
                 </div>
 
                 <Divider style={{ margin: '20px 0' }} />
                 <div>
                     <Title level={3} style={{ color: '#214B71' }}>
-                        <FileTextOutlined /> Recent Documents
+                        <FileTextOutlined /> Recent Tasks
                     </Title>
                     {viewMode === 'card' ? (
                         <Row gutter={[16, 16]}>
-                            {files.map(file => renderFileCard(file))}
+                            {tasks.map(task => renderTaskCard(task))}
                         </Row>
                     ) : (
-                        <List dataSource={files} renderItem={renderFileList} />
+                        <List dataSource={tasks} renderItem={renderTaskList} />
                     )}
                 </div>
 
@@ -192,28 +255,19 @@ const HomeContent: React.FC = () => {
 
                 <div>
                     <Title level={3} style={{ color: '#214B71' }}>
-                        <CheckCircleOutlined /> Completed Documents
+                        <CheckCircleOutlined /> Completed Tasks
                     </Title>
                     {viewMode === 'card' ? (
                         <Row gutter={[16, 16]}>
-                            {filteredCompletedFiles.map(file => renderFileCard(file))}
+                            {filteredCompletedTasks.map(task => renderTaskCard(task))}
                         </Row>
                     ) : (
-                        <List dataSource={filteredCompletedFiles} renderItem={renderFileList} />
+                        <List dataSource={filteredCompletedTasks} renderItem={renderTaskList} />
                     )}
                 </div>
-
             </div>
         </div>
     );
-
-
-
-
-
-
-
-
 };
 
 export default HomeContent;

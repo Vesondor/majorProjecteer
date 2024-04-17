@@ -3,44 +3,18 @@ import axios from 'axios';
 import { Checkbox, Button, Tag, List, Card, Space, Tooltip } from 'antd';
 import { CheckCircleTwoTone, ClockCircleTwoTone, InfoCircleOutlined } from '@ant-design/icons';
 import TaskDetail from './dbTaskDetail';
-
-interface File {
-  id: number;
-  title: string;
-  content: string;
-  translatedContent: string;
-  timestamp: string;
-  dateCreated: string;
-  documentStyle: JSON;
-  deadline: string;
-  status: number;
-}
-
-interface Task {
-  id: number;
-  name: string;
-  context:string;
-  message:string;
-  assignor: {
-    username: string;
-    role: string;
-  };
-  receiver: {
-    username: string;
-    role: string;
-  };
-  document: File;
-  completed: boolean;
-}
+import { Task } from '@/types';
 
 const InboxContent: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [displayCompleted, setDisplayCompleted] = useState(false);
 
+  const currentUser = localStorage.getItem('userId') ? parseInt(localStorage.getItem('userId')!) : null;
+  
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/tasks/4');
+      const response = await axios.get(`http://localhost:3001/api/tasks/${currentUser}`);
       console.log(response.data);
       const tasksArray = response.data.task_tbl || [];
       const fetchedTasks = tasksArray.map((task:any) => ({

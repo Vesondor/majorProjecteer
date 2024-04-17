@@ -15,37 +15,28 @@ interface Message {
   receiverUsername: string;
 }
 
-const CURRENT_USER_ID = 4; // Change this ID to test with different users
-
-const fetchMessages = async (): Promise<Message[]> => {
-  try {
-    const response = await axios.get<Message[]>(`http://localhost:3001/api/messages/${CURRENT_USER_ID}`);
-    return response.data.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-  } catch (error: any) {
-    alert('Error fetching messages: ' + (error.response?.data || error));
-    throw error;
-  }
-};
-
-const createMessage = async (receiverId: number, text: string) => {
-  try {
-    await axios.post('http://localhost:3001/api/messages', { senderId: CURRENT_USER_ID, receiverId, text });
-  } catch (error: any) {
-    console.error('Error creating message:', error.message);
-    throw error;
-  }
-};
-
 const MessageContent: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [newMessage, setNewMessage] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const currentUserId = localStorage.getItem('userId') ? parseInt(localStorage.getItem('userId')!) : null;
 
   useEffect(() => {
-    fetchMessages().then(setMessages);
-  }, []);
+    const fetchMessages = async () => {
+      try {
+        if (currentUserId) {
+          const response = await axios.get<Message[]>(`http://localhost:3001/api/messages/${currentUserId}`);
+          setMessages(response.data.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()));
+        }
+      } catch (error: any) {
+        alert('Error fetching messages: ' + (error.response?.data || error));
+        throw error;
+      }
+    };
+    fetchMessages();
+  }, [currentUserId]);
 
   useEffect(() => {
     scrollToBottom();
@@ -60,15 +51,21 @@ const MessageContent: React.FC = () => {
   };
 
   const sendMessage = async () => {
-    if (!selectedUser || !newMessage) return;
-    await createMessage(selectedUser, newMessage);
-    setNewMessage('');
-    fetchMessages().then(setMessages);
+    if (!selectedUser || !newMessage || !currentUserId) return;
+    try {
+      await axios.post('http://localhost:3001/api/messages', { senderId: currentUserId, receiverId: selectedUser, text: newMessage });
+      setNewMessage('');
+      const response = await axios.get<Message[]>(`http://localhost:3001/api/messages/${currentUserId}`);
+      setMessages(response.data.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()));
+    } catch (error: any) {
+      console.error('Error creating message:', error.message);
+      throw error;
+    }
   };
 
   // Determine unique users for the sidebar
   const uniqueUsers = messages.reduce((acc: Record<number, Message>, message: Message) => {
-    const otherUserId = message.senderId === CURRENT_USER_ID ? message.receiverId : message.senderId;
+    const otherUserId = message.senderId === currentUserId ? message.receiverId : message.senderId;
     if (!acc[otherUserId]) {
       acc[otherUserId] = message;
     }
@@ -83,11 +80,11 @@ const MessageContent: React.FC = () => {
           <h3 className="text-lg font-semibold text-center border-b pb-2">Contacts</h3>
           {Object.values(uniqueUsers).map((user) => {
             const isActive = user.senderId === selectedUser || user.receiverId === selectedUser;
-            const truncatedName = user.senderId === CURRENT_USER_ID ? user.receiverUsername : user.senderUsername;
+            const truncatedName = user.senderId === currentUserId ? user.receiverUsername : user.senderUsername;
 
             return (
               <div key={user.messageId}
-                onClick={() => handleUserSelection(user.senderId === CURRENT_USER_ID ? user.receiverId : user.senderId)}
+                onClick={() => handleUserSelection(user.senderId === currentUserId ? user.receiverId : user.senderId)}
                 className={`flex items-center p-2 cursor-pointer rounded-lg m-1 ${isActive ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200'} transition duration-150 ease-in-out break-words`}
               >
                 <UserOutlined className={`mr-2 ${isActive ? 'text-white' : 'text-gray-600'} text-xl`} />
@@ -100,22 +97,19 @@ const MessageContent: React.FC = () => {
         </div>
       </div>
 
-
-
-
       <div className="flex flex-col flex-grow p-4 bg-gray-100">
-        {selectedUser && (
+        {selectedUser && currentUserId && (
           <>
             {/* Message display area */}
             <div className="flex-grow overflow-y-auto">
               {messages
-                .filter((message) => (message.senderId === selectedUser && message.receiverId === CURRENT_USER_ID) || (message.senderId === CURRENT_USER_ID && message.receiverId === selectedUser))
+                .filter((message) => (message.senderId === selectedUser && message.receiverId === currentUserId) || (message.senderId === currentUserId && message.receiverId === selectedUser))
                 .map((message) => (
-                  <div key={message.messageId} className={`flex mb-4 ${message.senderId === CURRENT_USER_ID ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-3/4 p-3 rounded-lg shadow ${message.senderId === CURRENT_USER_ID ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`} style={{ maxWidth: '75%' }}>
+                  <div key={message.messageId} className={`flex mb-4 ${message.senderId === currentUserId ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-3/4 p-3 rounded-lg shadow ${message.senderId === currentUserId ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`} style={{ maxWidth: '75%' }}>
                       <span>{message.text}</span>
                       <div className="text-xs mt-2">
-                        {message.senderId === CURRENT_USER_ID ? 'You' : message.senderUsername} - {new Date(message.createdAt).toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        {message.senderId === currentUserId ? 'You' : message.senderUsername} - {new Date(message.createdAt).toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                       </div>
                     </div>
                   </div>

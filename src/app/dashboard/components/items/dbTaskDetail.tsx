@@ -2,38 +2,10 @@ import React, { useState } from 'react';
 import { Layout, Typography, Card, Tag, Timeline, Button } from 'antd';
 import { ClockCircleOutlined, UserOutlined, CalendarOutlined, FileOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import TextContent from './dbText'; // Ensure the path is correct
-
+import { File, Task, DocumentStyle, Op } from '@/types';
 const { Content } = Layout;
 const { Title, Text } = Typography;
 
-interface File {
-  id: number;
-  title: string;
-  content: string;
-  translatedContent: string;
-  timestamp: string;
-  dateCreated: string;
-  documentStyle: JSON;
-  deadline: string;
-  status: number;
-}
-
-interface Task {
-  id: number;
-  name: string;
-  context: string;
-  message: string;
-  assignor: {
-    username: string;
-    role: string;
-  };
-  receiver: {
-    username: string;
-    role: string;
-  };
-  document: File;
-  completed: boolean;
-}
 
 const TaskDetail: React.FC<{ task: Task; onBack: () => void }> = ({ task, onBack }) => {
   const [showTextContent, setShowTextContent] = useState<boolean>(false);
@@ -51,14 +23,19 @@ const TaskDetail: React.FC<{ task: Task; onBack: () => void }> = ({ task, onBack
 
   if (showTextContent && selectedFile) {
     // Extract the text from the documentStyle object
-    const initText = selectedFile.documentStyle?.ops[0]?.insert || ''; // Default to an empty string if ops[0]?.insert is undefined
+    let initText = selectedFile.documentStyle?.ops[0]?.insert || ''; // Default to an empty string if ops[0]?.insert is undefined
     
+    const parsedText = JSON.parse(initText);
+            if (parsedText && typeof parsedText === 'object' && 'content' in parsedText) {
+                initText = parsedText.content; // Use the HTML content
+            }
     // Extract the translated text directly from the selectedFile
     const initTranslateText = selectedFile.translatedContent;
   
     return (
       <TextContent
         fileId={selectedFile.id}
+        title={selectedFile.title}
         initText={initText}
         initTranslateText={initTranslateText}
         onBackButtonClick={handleBackToTaskDetail}

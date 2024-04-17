@@ -1,26 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { Button } from 'antd';
+import { Button, Divider, Layout, Space, Typography, message } from 'antd';
 import axios from 'axios';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, SaveFilled } from '@ant-design/icons';
+import { TextContentProps } from '@/types';
 import 'react-quill/dist/quill.snow.css';
+
+const { Content, Header } = Layout;
+const { Title, Text } = Typography;
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
-interface TextContentProps {
-  fileId: number;
-  initText: string;
-  initTranslateText: string;
-  onBackButtonClick: () => void;
-}
 
-const TextContent: React.FC<TextContentProps> = ({ fileId, initText, initTranslateText, onBackButtonClick }) => {
-  const [text, setText] = useState(initText);
-  const [translatedText, setTranslateText] = useState(initTranslateText)
+
+const TextContent: React.FC<TextContentProps> = ({
+  fileId,
+  title,
+  initText,
+  initTranslateText,
+  onBackButtonClick,
+}) => {
+  const [text, setText] = useState("<strong>sldasodasodasodsaoda</strong>");
+  const [translatedText, setTranslateText] = useState(initTranslateText);
 
   useEffect(() => {
     setText(initText);
-
   }, [initText]);
 
   const handleChange = (content: string) => {
@@ -29,38 +33,33 @@ const TextContent: React.FC<TextContentProps> = ({ fileId, initText, initTransla
 
   const saveDocument = async () => {
     try {
-
-      const cleanedText = text.replace(/<[^>]*>/g, ''); // Remove HTML tags
-      const documentStyle = JSON.stringify(cleanedText).replace(/"/g, ''); // Remove double quotes
-      const wordSpaced = documentStyle.split(' ');
+      // Send HTML content directly; no need to strip tags
+      const documentStyle = JSON.stringify({ content: text });
+      const wordSpaced = text.replace(/<[^>]+>/g, '').split(' '); // Calculate word count without HTML tags
       const wordCount = wordSpaced.length;
-      const documentTranslated = translatedText;
+      const documentTranslated = initTranslateText;
 
       await axios.put(`http://localhost:3001/api/documents/${fileId}`, {
         documentStyle,
         wordCount,
         documentTranslated,
       });
-
-      console.log('Document saved to server');
+      message.success('Document saved to server', 1);
     } catch (error: any) {
       console.error('Error saving document:', error.message);
+      message.error('Error saving document', 1);
     }
   };
+
   const handleSave = () => {
     saveDocument();
   };
 
   const modules = {
     toolbar: [
-      [{ header: [1, 2, false] }],
       ['bold', 'italic', 'underline', 'strike'],
       [{ list: 'ordered' }, { list: 'bullet' }],
       [{ script: 'sub' }, { script: 'super' }],
-      [{ indent: '-1' }, { indent: '+1' }],
-      [{ direction: 'rtl' }],
-      [{ size: ['small', false, 'large', 'huge'] }],
-      [{ color: [] }, { background: [] }],
       ['clean'],
     ],
   };
@@ -72,36 +71,72 @@ const TextContent: React.FC<TextContentProps> = ({ fileId, initText, initTransla
         handleSave();
       }
     };
-
     document.addEventListener('keydown', saveText);
-
     return () => {
       document.removeEventListener('keydown', saveText);
     };
   }, [text, fileId]);
 
   return (
-    <div className="text-editor-container" style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Button icon={<ArrowLeftOutlined />} onClick={onBackButtonClick} style={{ margin: '10px', alignSelf: 'flex-start' }}>
-        Back
-      </Button>
-      <div className="workspace" style={{ display: 'flex', height: 'calc(100% - 40px)', overflow: 'hidden', margin: '20px' }}>
-        <div className="original-text-section" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'auto', marginRight: '10px' }}>
-          <div className="upper-text-section" style={{ flex: 1, overflow: 'auto' }}>
-            <h4>Original Text</h4>
-            <div className="original-text" dangerouslySetInnerHTML={{ __html: initText }} />
+    <Layout>
+      <Header style={{ backgroundColor: '#214B71' }}>
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Button
+            className="bg-white"
+            icon={<ArrowLeftOutlined />}
+            onClick={onBackButtonClick}
+            style={{ color: '#214B71' }}
+          >
+            Back
+          </Button>
+          <h5 className='font-bold'>{title}</h5>
+          <Button
+            icon={<SaveFilled />}
+            type="primary"
+            className="bg-blue-500"
+            onClick={handleSave}
+          >
+            Save
+          </Button>
+        </Space>
+      </Header>
+      <Content style={{ display: 'flex', height: 'calc(100vh - 64px)', padding: '20px' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', marginRight: '20px' }}>
+          <div style={{ flex: 1, overflow: 'auto' }}>
+            <Title level={4} className="text-blue-900">
+              Original Text
+            </Title>
+            <Text style={{ whiteSpace: 'pre-wrap' }}>{initTranslateText}</Text>
           </div>
-          <div className="lower-text-section" style={{ flex: 1, marginTop: '20px', overflow: 'auto' }}>
-            <h4>Machine Translation</h4>
-            <div className="translated-text" dangerouslySetInnerHTML={{ __html: initTranslateText }} />
+          <Divider />
+          <div style={{ flex: 1, overflow: 'auto' }}>
+            <Title level={4} className="text-gray-800">
+              Machine Translation
+            </Title>
+            <Text>This will be replaced by Google Translate API.</Text>
           </div>
         </div>
-        <div className="translation-editor-section" style={{ flex: 1, overflow: 'auto' }}>
-          <h4>Text Editor</h4>
-          <ReactQuill theme="snow" value={text} onChange={handleChange} modules={modules} style={{ height: '100%', overflow: 'auto' }} />
+        <div style={{ flex: 1, overflow: 'auto' }}>
+          <Title level={4} className="text-red-900">
+            Translated Text
+          </Title>
+          <ReactQuill
+            theme="snow"
+            value={text}
+            onChange={handleChange}
+            modules={modules}
+            style={{
+              height: '100%',
+              overflow: 'auto',
+              backgroundColor: '#f5f5f5',
+              border: '1px solid #e8e8e8',
+              borderRadius: '4px',
+              padding: '20px',
+            }}
+          />
         </div>
-      </div>
-    </div>
+      </Content>
+    </Layout>
   );
 };
 

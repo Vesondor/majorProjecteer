@@ -5,37 +5,10 @@ import { SearchOutlined, CheckCircleOutlined, ClockCircleOutlined, UserOutlined 
 import CreateTask from './dbCreateTask';
 import Charts from './chart';
 import TaskDetail from './dbTaskDetail';
+import {Task } from '@/types';
 
 const { Title, Text } = Typography;
 
-interface File {
-  id: number;
-  title: string;
-  content: string;
-  translatedContent: string;
-  timestamp: string;
-  dateCreated: string;
-  documentStyle: JSON;
-  deadline: string;
-  status: number;
-}
-
-interface Task {
-  id: number;
-  name: string;
-  context: string;
-  message: string;
-  assignor: {
-    username: string;
-    role: string;
-  };
-  receiver: {
-    username: string;
-    role: string;
-  };
-  document: File;
-  completed: boolean;
-}
 
 const HomeContent: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);

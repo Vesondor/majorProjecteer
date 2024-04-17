@@ -73,3 +73,49 @@ export type Button = {
   label: string;
   link: string;
 };
+
+export type File = {
+  id: number;
+  title: string;
+  content: string;
+  translatedContent: string;
+  timestamp: string;
+  dateCreated: string;
+  documentStyle: DocumentStyle;
+  deadline: string;
+  status: number;
+}
+
+export type Task =  {
+  taskName: any;
+  id: number;
+  name: string;
+  context: string;
+  message: string;
+  assignor: {
+    username: string;
+    role: string;
+  };
+  receiver: {
+    username: string;
+    role: string;
+  };
+  document: File;
+  completed: boolean;
+}
+
+export type DocumentStyle = {
+  ops: Op[]; // Array of 'Op' objects
+}
+
+export type Op =  {
+  insert: string; // Assuming each 'insert' is a string
+}
+
+export type TextContentProps = {
+  fileId: number;
+  title: string;
+  initText: string;
+  initTranslateText: string;
+  onBackButtonClick: () => void;
+}

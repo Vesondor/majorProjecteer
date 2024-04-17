@@ -6,7 +6,6 @@ import DashboardHeader from './components/dbHeader';
 import TextContent from './components/items/dbText';
 import InboxContent from './components/items/dbInbox';
 import SettingsContent from './components/items/dbSettings';
-import TransferContent from './components/items/dbTransfer';
 
 import '../../styles/app.css';
 import MessageContent from './components/items/dbMessages';
@@ -31,8 +30,6 @@ const App: React.FC = () => {
         return <InboxContent />;
       case 'Settings':
         return <SettingsContent />;
-      case 'Transfer':
-        return <TransferContent />;
       default:
         return <HomeContent />;
     }
@@ -75,11 +72,6 @@ const App: React.FC = () => {
                 key: 'Inbox',
                 icon: <InboxOutlined />,
                 label: 'Inbox',
-              },
-              {
-                key: 'Transfer',
-                icon: <SwapOutlined />,
-                label: 'Transfer',
               },
               {
                 key: 'Settings',

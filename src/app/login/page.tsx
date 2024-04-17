@@ -10,7 +10,7 @@ const Login: React.FC = () => {
   // Function to handle login on form submission
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     // Send a POST request to the backend with the username and password
     const response = await fetch('http://localhost:3001/api/login', {
       method: 'POST',
@@ -18,18 +18,18 @@ const Login: React.FC = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        "userid": 1,
         username,
         password,
       }),
     });
-
+  
     const data = await response.json();
-
+  
     // Check if the login was successful and handle redirection based on the user's role
     if (data.loggedIn) {
       localStorage.setItem('token', data.token); // Store the token for future requests
-
+      localStorage.setItem('userId', data.userId.toString()); // Store the userId as a string for future use
+  
       switch(data.role) {
         case 'translator':
           router.push('/dashboard');
@@ -40,12 +40,16 @@ const Login: React.FC = () => {
         default:
           // Handle unexpected roles or errors
           console.error('Unexpected role or error');
+          alert('Unexpected role, please contact support.'); // Provide user feedback
+          break;
       }
     } else {
       // Handle login failure (e.g., show an error message)
-      console.error('Login failed');
+      alert('Login failed: ' + (data.error || 'Please check your username and password.'));
+      console.error('Login failed', data.error);
     }
   };
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
