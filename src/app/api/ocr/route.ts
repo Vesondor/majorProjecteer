@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
         const image = body.image;
-        const apiKey = "AIzaSyDEZ6QEqQqL88OzwNecLevBxKxntN5qgYE";
+
         const visionApiUrl = `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`;
 
         const requestBody = {
