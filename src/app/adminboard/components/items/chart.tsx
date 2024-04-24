@@ -17,34 +17,35 @@ interface TranslatorData {
 }
 
 const dataBar: DataBar[] = [
-  { name: 'January', General: 10, Specialized: 15, Media: 20 },
-  { name: 'February', General: 8, Specialized: 15, Media: 20 },
-  { name: 'March', General: 10, Specialized: 15, Media: 20 },
-  { name: 'April', General: 12, Specialized: 17, Media: 18 },
-  { name: 'May', General: 15, Specialized: 20, Media: 25 },
-  { name: 'June', General: 11, Specialized: 14, Media: 22 },
-  { name: 'July', General: 13, Specialized: 19, Media: 21 },
-  { name: 'August', General: 9, Specialized: 12, Media: 23 },
-  { name: 'September', General: 14, Specialized: 18, Media: 19 },
-  { name: 'October', General: 7, Specialized: 11, Media: 24 },
-  { name: 'November', General: 16, Specialized: 20, Media: 22 },
-  { name: 'December', General: 12, Specialized: 15, Media: 18 },
+  { name: 'January', General: 1.25, Specialized: 2, Media: 0.75 },
+  { name: 'February', General: 2, Specialized: 2.5, Media: 1.25 },
+  { name: 'March', General: 2.5, Specialized: 3.75, Media: 5 },
+  { name: 'April', General: 3, Specialized: 4.25, Media: 4.5 },
+  { name: 'May', General: 3.75, Specialized: 5, Media: 6.25 },
+  { name: 'June', General: 2.75, Specialized: 3.5, Media: 5.5 },
+  { name: 'July', General: 3.25, Specialized: 4.75, Media: 5.25 },
+  { name: 'August', General: 2.25, Specialized: 3, Media: 5.75 },
+  { name: 'September', General: 3.5, Specialized: 4.5, Media: 4.75 },
+  { name: 'October', General: 1.75, Specialized: 2.75, Media: 6 },
+  { name: 'November', General: 4, Specialized: 5, Media: 5.5 },
+  { name: 'December', General: 3, Specialized: 3.75, Media: 4.5 },
 ];
 
 const translatorData: TranslatorData[] = [
-  { month: 'January', translators: [{ name: 'Alice', tasks: 5 }, { name: 'Bob', tasks: 8 }] },
-  { month: 'February', translators: [{ name: 'Charlie', tasks: 7 }, { name: 'David', tasks: 6 }] },
-  { month: 'March', translators: [{ name: 'Eve', tasks: 9 }, { name: 'Frank', tasks: 4 }] },
-  { month: 'April', translators: [{ name: 'George', tasks: 3 }, { name: 'Hannah', tasks: 7 }] },
-  { month: 'May', translators: [{ name: 'Ivy', tasks: 6 }, { name: 'John', tasks: 8 }] },
-  { month: 'June', translators: [{ name: 'Karen', tasks: 5 }, { name: 'Leo', tasks: 9 }] },
-  { month: 'July', translators: [{ name: 'Mia', tasks: 7 }, { name: 'Nick', tasks: 5 }] },
-  { month: 'August', translators: [{ name: 'Olivia', tasks: 8 }, { name: 'Peter', tasks: 6 }] },
-  { month: 'September', translators: [{ name: 'Quincy', tasks: 4 }, { name: 'Rachel', tasks: 10 }] },
-  { month: 'October', translators: [{ name: 'Steve', tasks: 5 }, { name: 'Tina', tasks: 7 }] },
-  { month: 'November', translators: [{ name: 'Ursula', tasks: 6 }, { name: 'Victor', tasks: 8 }] },
-  { month: 'December', translators: [{ name: 'Wendy', tasks: 9 }, { name: 'Xavier', tasks: 3 }] },
+  { month: 'January', translators: [{ name: 'Alice', tasks: 1.25 }, { name: 'Bob', tasks: 2 }] },
+  { month: 'February', translators: [{ name: 'Charlie', tasks: 1.75 }, { name: 'David', tasks: 1.5 }] },
+  { month: 'March', translators: [{ name: 'Eve', tasks: 2.25 }, { name: 'Frank', tasks: 1 }] },
+  { month: 'April', translators: [{ name: 'George', tasks: 0.75 }, { name: 'Hannah', tasks: 1.75 }] },
+  { month: 'May', translators: [{ name: 'Ivy', tasks: 1.5 }, { name: 'John', tasks: 2 }] },
+  { month: 'June', translators: [{ name: 'Karen', tasks: 1.25 }, { name: 'Leo', tasks: 2.25 }] },
+  { month: 'July', translators: [{ name: 'Mia', tasks: 1.75 }, { name: 'Nick', tasks: 1.25 }] },
+  { month: 'August', translators: [{ name: 'Olivia', tasks: 2 }, { name: 'Peter', tasks: 1.5 }] },
+  { month: 'September', translators: [{ name: 'Quincy', tasks: 1 }, { name: 'Rachel', tasks: 2.5 }] },
+  { month: 'October', translators: [{ name: 'Steve', tasks: 1.25 }, { name: 'Tina', tasks: 1.75 }] },
+  { month: 'November', translators: [{ name: 'Ursula', tasks: 1.5 }, { name: 'Victor', tasks: 2 }] },
+  { month: 'December', translators: [{ name: 'Wendy', tasks: 2.25 }, { name: 'Xavier', tasks: 0.75 }] },
 ];
+
 
 
 const COLORS = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];

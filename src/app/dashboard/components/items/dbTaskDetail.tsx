@@ -38,8 +38,7 @@ const TaskDetail: React.FC<{ task: Task; onBack: () => void }> = ({ task, onBack
         title={selectedFile.title}
         initText={initText}
         initTranslateText={initTranslateText}
-        onBackButtonClick={handleBackToTaskDetail}
-      />
+        onBackButtonClick={handleBackToTaskDetail} initMachine={''}      />
     );
   }
   

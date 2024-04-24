@@ -15,7 +15,7 @@ interface Message {
   receiverUsername: string;
 }
 
-const CURRENT_USER_ID = 1; // Change this ID to test with different users
+const CURRENT_USER_ID = 1; 
 
 const fetchMessages = async (): Promise<Message[]> => {
   try {

@@ -5,7 +5,7 @@ import { SearchOutlined, CheckCircleOutlined, ClockCircleOutlined, UserOutlined 
 import CreateTask from './dbCreateTask';
 import Charts from './chart';
 import TaskDetail from './dbTaskDetail';
-import {Task } from '@/types';
+import { Task } from '@/types';
 
 const { Title, Text } = Typography;
 
@@ -16,14 +16,26 @@ const HomeContent: React.FC = () => {
   const [showCreateTask, setShowCreateTask] = useState<boolean>(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
+
+  const getUserId = () => {
+    if (typeof window !== 'undefined' && localStorage.getItem('adminId')) {
+      return localStorage.getItem('adminId');
+    }
+    return null;
+  };
+
+  const userId = getUserId();
+
+
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get<{ task_tbl: any[] }>('http://localhost:3001/api/tasks/4');
+        const response = await axios.get<{ task_tbl: any[] }>(`http://localhost:3001/api/taskss/${userId}`);
         if (response.data && Array.isArray(response.data.task_tbl)) {
           const formattedTasks: Task[] = response.data.task_tbl.map(task => ({
             id: task.taskId,
             name: task.taskName,
+            taskName: task.taskName,
             context: task.context,
             message: task.message,
             assignor: {
@@ -65,7 +77,12 @@ const HomeContent: React.FC = () => {
   };
 
   const toggleCreateTask = () => {
-    setShowCreateTask(!showCreateTask);
+    if (showCreateTask) {
+      // If showCreateTask is true (i.e., "Back" button is clicked), reload the page
+      window.location.reload();
+    } else {
+      setShowCreateTask(!showCreateTask);
+    }
   };
 
   const filteredTasks = tasks.filter(task =>

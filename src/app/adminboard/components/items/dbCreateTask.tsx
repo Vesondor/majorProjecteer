@@ -48,10 +48,6 @@ const UploadContainer = styled.div<{ isDragging: boolean }>`
   cursor: pointer;
 `;
 
-const FileName = styled.span`
-  margin-left: 10px;
-  font-size: 14px;
-`;
 
 const UploadButton = styled(StyledButton)`
   font-size: 14px;
@@ -73,7 +69,7 @@ const CreateTaskPage: React.FC = () => {
         reader.onloadend = async () => {
           const base64String = reader.result as string;
           setIsModalVisible(true);
-
+        
           try {
             const response = await fetch('/api/ocr', {
               method: 'POST',
@@ -81,25 +77,23 @@ const CreateTaskPage: React.FC = () => {
               body: JSON.stringify({ image: base64String.split(',')[1] }),
             });
             const data = await response.json();
-
-            // Process OCR text right here
-            alert(JSON.stringify(values))
-            const cleanedText = data.text.replace(/<[^>]*>/g, '') ?? '';
-            const docStyle = JSON.stringify(cleanedText).replace(/"/g, '');
-            setOcrText(data.text); // Update state, but use local 'cleanedText' for immediate processing
-
-            // Prepare task details to be confirmed
+        
+            // Remove newline characters from OCR text
+            const cleanedText = data.text.replace(/[\r\n]+/g, '');
+        
+            setOcrText(cleanedText);
+        
+            const docStyle = JSON.stringify(cleanedText);
             setTaskDetails({
               taskName: values.title,
               context: values.context,
               message: values.message,
               documentName: values.title,
-              documentTranslated: "",
+              documentTranslated: docStyle,
               documentStyle: docStyle,
               language: 'en',
-              wordCount: data.text.split(' ').length,
+              wordCount: cleanedText.split(' ').length,
             });
-
           } catch (error) {
             console.error('Error:', error);
             setIsModalVisible(false);
@@ -109,6 +103,7 @@ const CreateTaskPage: React.FC = () => {
             });
           }
         };
+        
         reader.readAsDataURL(fileList[0]);
       } else {
         Modal.error({
@@ -124,7 +119,6 @@ const CreateTaskPage: React.FC = () => {
 
   const handleConfirmTask = async () => {
     if (!taskDetails) return;
-
     try {
       const currentUserId = localStorage.getItem('adminId') ? parseInt(localStorage.getItem('adminId')!) : null;
       if (currentUserId) {
@@ -134,8 +128,8 @@ const CreateTaskPage: React.FC = () => {
           body: JSON.stringify({
             ...taskDetails,
             assignorId: currentUserId,
-            receiverId: 4, // Example, set as per your actual data
-            projectId: 1, // Example, set as per your actual data
+            receiverId: 4,
+            projectId: 1,
           }),
         });
         const data = await response.json();
@@ -167,7 +161,7 @@ const CreateTaskPage: React.FC = () => {
     },
     beforeUpload: (file: File) => {
       setFileList([file]);
-      return false; // Prevent automatic uploading
+      return false;
     },
     fileList,
   };
@@ -213,9 +207,7 @@ const CreateTaskPage: React.FC = () => {
             placeholder="Select the assignee"
             suffixIcon={<UserOutlined style={{ fontSize: '18px' }} />}
           >
-            <Option value="John Doe">John Doe</Option>
-            <Option value="Jane Smith">Jane Smith</Option>
-            <Option value="Alice Johnson">Alice Johnson</Option>
+            <Option value="translator">translator</Option>
           </Select>
         </FormItem>
         <FormItem label="Attachment" name="attachment" rules={[{ required: true, message: 'Please upload an attachment' }]}>
@@ -223,7 +215,6 @@ const CreateTaskPage: React.FC = () => {
             <Upload {...uploadProps}>
               <UploadButton icon={<UploadOutlined />}>Select File</UploadButton>
             </Upload>
-            {fileList.length > 0 && <FileName>{fileList[0].name}</FileName>}
           </UploadContainer>
         </FormItem>
         <FormItem style={{ textAlign: 'center' }}>
@@ -240,7 +231,13 @@ const CreateTaskPage: React.FC = () => {
           <Button key="back" onClick={() => setIsModalVisible(false)}>
             Cancel
           </Button>,
-          <Button key="submit" type="primary" onClick={handleConfirmTask}>
+          <Button
+            key="submit"
+            type="primary"
+            style={{ backgroundColor: '#214B71' , color:'white'}}
+            onClick={handleConfirmTask}
+            disabled={!ocrText}
+          >
             Confirm
           </Button>,
         ]}

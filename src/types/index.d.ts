@@ -82,6 +82,7 @@ export type File = {
   timestamp: string;
   dateCreated: string;
   documentStyle: DocumentStyle;
+  documentMachine: string;
   deadline: string;
   status: number;
 }
@@ -101,7 +102,7 @@ export type Task =  {
     role: string;
   };
   document: File;
-  completed: boolean;
+  status: int;
 }
 
 export type DocumentStyle = {
@@ -116,6 +117,7 @@ export type TextContentProps = {
   fileId: number;
   title: string;
   initText: string;
+  initMachine:string;
   initTranslateText: string;
   onBackButtonClick: () => void;
 }

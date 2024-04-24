@@ -2,10 +2,7 @@
 import React, { useState } from 'react';
 import { Layout, Menu, Button } from 'antd';
 import { FileTextOutlined, InboxOutlined, SwapOutlined, SettingOutlined, MenuFoldOutlined, MenuUnfoldOutlined, MessageOutlined, HomeOutlined } from '@ant-design/icons';
-import DashboardHeader from './components/dbHeader';
-import TextContent from './components/items/dbText';
 import SettingsContent from './components/items/dbSettings';
-import TransferContent from './components/items/dbTransfer';
 
 import '../../styles/app.css';
 import MessageContent from './components/items/dbMessages';
@@ -28,8 +25,6 @@ const App: React.FC = () => {
         return <MessageContent />;
       case 'Settings':
         return <SettingsContent />;
-      case 'Transfer':
-        return <TransferContent />;
       default:
         return <HomeContent />;
     }
@@ -67,11 +62,6 @@ const App: React.FC = () => {
                 key: 'Messages',
                 icon: <MessageOutlined />,
                 label: 'Messages',
-              },
-              {
-                key: 'Transfer',
-                icon: <SwapOutlined />,
-                label: 'Transfer',
               },
               {
                 key: 'Settings',

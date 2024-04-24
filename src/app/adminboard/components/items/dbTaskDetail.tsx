@@ -1,26 +1,10 @@
 import React, { useState } from 'react';
 import { Layout, Typography, Card, Tag, Timeline, Button } from 'antd';
 import { FolderOpenOutlined } from '@ant-design/icons';
-
+import { Task,File } from '@/types';
 const { Content } = Layout;
 const { Title, Text } = Typography;
 
-interface File {
-  id: number;
-  name: string;
-  content: string;
-}
-
-interface Task {
-  subject?: string;
-  details?: string;
-  to?: string;
-  date?: string;
-  time?: string;
-  context?: string;
-  message?: string;
-  files?: File[];
-}
 
 const TaskDetail: React.FC<{ task: Task; onBack: () => void }> = ({ task, onBack }) => {
   const [showTextContent, setShowTextContent] = useState<boolean>(false);
@@ -36,13 +20,12 @@ const TaskDetail: React.FC<{ task: Task; onBack: () => void }> = ({ task, onBack
       <Content style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'start', background: '#f0f2f5' }}>
         <Card style={{ width: '100%', maxWidth: '800px', background: '#fff' }}>
           <Button onClick={onBack} style={{ marginBottom: '15px' }}>Back</Button>
-          <Title level={2}>{task.subject || 'Task Details'}</Title>
-          <Text>{task.details || 'No additional details provided.'}</Text>
+          <Title level={2}>{task.name || 'Task Details'}</Title>
+          <Text>{task.context || 'No additional details provided.'}</Text>
           <br />
-          <Text strong>To: {task.to || 'Not specified'}</Text>
+          <Text strong>To: {task.assignor.username|| 'Not specified'}</Text>
           <br />
-          <Text type="secondary">Date: {task.date || 'Not specified'}</Text>
-          {task.time && <Text type="secondary"> at {task.time}</Text>}
+          <Text type="secondary">Date: {task.document.dateCreated || 'Not specified'}</Text>
           <br />
           <Text type="secondary">Context: {task.context || 'Not specified'}</Text>
           <br />
@@ -50,16 +33,16 @@ const TaskDetail: React.FC<{ task: Task; onBack: () => void }> = ({ task, onBack
             <Text>{task.message || 'No message provided.'}</Text>
           </Card>
           <Timeline>
-            <Timeline.Item color="green">Task Created {task.date}</Timeline.Item>
-            {task.time && <Timeline.Item color="blue">Time Allocated {task.time}</Timeline.Item>}
+            <Timeline.Item color="green">Task Created {task.document.dateCreated}</Timeline.Item>
+            {task.document.dateCreated && <Timeline.Item color="blue">Time Allocated {task.document.dateCreated}</Timeline.Item>}
           </Timeline>
-          {task.files?.map((file, index) => (
+          {/* {task.document?.map((file, index) => (
             <Card key={index} type="inner" title="Document" extra={<FolderOpenOutlined />} style={{ marginTop: '20px', backgroundColor: '#f5f5f5' }}>
               <a onClick={() => handleFileClick(file)}>
                 {file.name}
               </a>
             </Card>
-          ))}
+          ))} */}
         </Card>
       </Content>
     </Layout>

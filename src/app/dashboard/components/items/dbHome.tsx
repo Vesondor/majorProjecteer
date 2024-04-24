@@ -26,6 +26,9 @@ const HomeContent: React.FC = () => {
     const getUserId = () => {
         if (typeof window !== 'undefined' && localStorage.getItem('translatorId')) {
             return localStorage.getItem('translatorId');
+        }else{
+            router.push('/login')
+
         }
         return null;
     };
@@ -63,6 +66,7 @@ const HomeContent: React.FC = () => {
                     id: task.document.documentId,
                     title: task.document.documentName,
                     translatedContent: task.document.documentTranslated,
+                    documentMachine: task.document.documentMachine,
                     dateCreated: new Date(task.document.dateCreated).toLocaleString('km-KH', {
                         year: 'numeric',
                         month: 'numeric',
@@ -89,7 +93,6 @@ const HomeContent: React.FC = () => {
                     role: task.receiver.role,
                 },
             }));
-
             const tasksToSet: Task[] = [];
             const completedTasksToSet: Task[] = [];
             formattedTasks.forEach((formattedTask: Task) => {
@@ -103,7 +106,6 @@ const HomeContent: React.FC = () => {
             setCompletedTasks(completedTasksToSet);
         } catch (error) {
             console.error('Error fetching tasks:', error);
-            alert('Error fetching tasks');
         }
     };
 
@@ -132,6 +134,8 @@ const HomeContent: React.FC = () => {
     };
 
     const handleShare = () => { };
+
+    
 
     const filteredCompletedTasks = completedTasks.filter(task =>
         task.taskName ? task.taskName.toLowerCase().includes(searchQuery.toLowerCase()) : false
@@ -200,11 +204,11 @@ const HomeContent: React.FC = () => {
             if (parsedText && typeof parsedText === 'object' && 'content' in parsedText) {
                 formattedText = parsedText.content; // Use the HTML content
             }
-        } catch (error) {
-            // If it's not JSON or doesn't contain the 'content' key, use it as is (plain text or direct HTML)
+        } catch (error:any) {
+             console.error('Error: ',error.message)
         }
     
-        return <TextContent fileId={selectedTask.document.id} title={selectedTask.document.title} initTranslateText={selectedTask.document.translatedContent} initText={formattedText} onBackButtonClick={handleBackButtonClick} />;
+        return <TextContent fileId={selectedTask.document.id} title={selectedTask.document.title} initTranslateText={selectedTask.document.translatedContent} initMachine={selectedTask.document.documentMachine} initText={formattedText} onBackButtonClick={handleBackButtonClick} />;
     }
     
 

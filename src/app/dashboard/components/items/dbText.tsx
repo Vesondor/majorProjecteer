@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { Button, Divider, Layout, Space, Typography, message } from 'antd';
+import { Button, Divider, Layout, Space, Typography, message, Spin } from 'antd';
 import axios from 'axios';
 import { ArrowLeftOutlined, SaveFilled } from '@ant-design/icons';
 import { TextContentProps } from '@/types';
@@ -17,14 +17,19 @@ const TextContent: React.FC<TextContentProps> = ({
   fileId,
   title,
   initText,
+  initMachine,
   initTranslateText,
   onBackButtonClick,
 }) => {
   const [text, setText] = useState("<strong>sldasodasodasodsaoda</strong>");
   const [translatedText, setTranslateText] = useState(initTranslateText);
+  const [machineTranslated, setMachineTranslated] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [machineLoading, setMachineLoading] = useState(false);
 
   useEffect(() => {
     setText(initText);
+    setMachineTranslated(initMachine);
   }, [initText]);
 
   const handleChange = (content: string) => {
@@ -33,9 +38,8 @@ const TextContent: React.FC<TextContentProps> = ({
 
   const saveDocument = async () => {
     try {
-      // Send HTML content directly; no need to strip tags
       const documentStyle = JSON.stringify({ content: text });
-      const wordSpaced = text.replace(/<[^>]+>/g, '').split(' '); // Calculate word count without HTML tags
+      const wordSpaced = text.replace(/<[^>]+>/g, '').split(' ');
       const wordCount = wordSpaced.length;
       const documentTranslated = initTranslateText;
 
@@ -43,6 +47,7 @@ const TextContent: React.FC<TextContentProps> = ({
         documentStyle,
         wordCount,
         documentTranslated,
+        documentMachine: machineTranslated
       });
       message.success('Document saved to server', 1);
     } catch (error: any) {
@@ -51,9 +56,48 @@ const TextContent: React.FC<TextContentProps> = ({
     }
   };
 
+  const translateDocument = async (language: string) => {
+    try {
+      // Set loading state to true for buttons
+      setLoading(true);
+
+      // Set a timeout before showing the loading indicator for machine translation
+      const timeout = setTimeout(() => {
+        setMachineLoading(true);
+      }, 2000);
+
+      const response = await axios.post(`http://localhost:3001/api/${language}`, {
+        text: initTranslateText,
+      });
+
+      // Clear the timeout and hide the loading indicator after translation is complete
+      clearTimeout(timeout);
+      setLoading(false);
+      setMachineLoading(false);
+
+      message.success('Document translated', 2);
+      setMachineTranslated(response.data.translation);
+    } catch (error: any) {
+      // Clear the timeout and hide the loading indicators if there's an error
+      setLoading(false);
+      setMachineLoading(false);
+
+      console.error('Error translating document:', error.message);
+      message.error('Error translating document', 2);
+    }
+  };
+
+
   const handleSave = () => {
     saveDocument();
   };
+
+  const handleKhmer = () => {
+    translateDocument('kh');
+  }
+  const handleEnglish = () => {
+    translateDocument('eng');
+  }
 
   const modules = {
     toolbar: [
@@ -81,21 +125,23 @@ const TextContent: React.FC<TextContentProps> = ({
     <Layout>
       <Header style={{ backgroundColor: '#214B71' }}>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Button
-            className="bg-white"
-            icon={<ArrowLeftOutlined />}
-            onClick={onBackButtonClick}
-            style={{ color: '#214B71' }}
-          >
+          <Button className="bg-white" icon={<ArrowLeftOutlined />} onClick={onBackButtonClick} style={{ color: '#214B71' }}>
             Back
           </Button>
-          <h5 className='font-bold'>{title}</h5>
-          <Button
-            icon={<SaveFilled />}
-            type="primary"
-            className="bg-blue-500"
-            onClick={handleSave}
-          >
+          <h5 className="font-bold text-white dark:text-white">{title}</h5>
+          <Space>
+            <Spin spinning={loading}>
+              <Button type="primary" className="bg-blue-500" onClick={handleKhmer}>
+                Translate to Khmer
+              </Button>
+            </Spin>
+            <Spin spinning={loading}>
+              <Button type="primary" className="bg-blue-500" onClick={handleEnglish}>
+                Translate to English
+              </Button>
+            </Spin>
+          </Space>
+          <Button icon={<SaveFilled />} type="primary" className="bg-blue-500" onClick={handleSave}>
             Save
           </Button>
         </Space>
@@ -113,7 +159,13 @@ const TextContent: React.FC<TextContentProps> = ({
             <Title level={4} className="text-gray-800">
               Machine Translation
             </Title>
-            <Text>This will be replaced by Google Translate API.</Text>
+            {machineLoading ? (
+              <Spin spinning={machineLoading}>
+                <Text>{machineTranslated}</Text>
+              </Spin>
+            ) : (
+              <Text>{machineTranslated}</Text>
+            )}
           </div>
         </div>
         <div style={{ flex: 1, overflow: 'auto' }}>
