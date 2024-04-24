@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { Card, Row, Col, Dropdown, Menu, Typography, Button, List, Input, Divider } from 'antd';
 import { MoreOutlined, AppstoreOutlined, UnorderedListOutlined, SearchOutlined, FileTextOutlined, CheckCircleOutlined } from '@ant-design/icons';
-import { File, Task, DocumentStyle, Op } from '@/types';
+import {Task } from '@/types';
 import TextContent from './dbText';
 import '../../../../styles/app.css';
 const { Text, Title } = Typography;

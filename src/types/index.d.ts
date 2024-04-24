@@ -93,6 +93,7 @@ export type Task =  {
   name: string;
   context: string;
   message: string;
+  dateClosed: string;
   assignor: {
     username: string;
     role: string;

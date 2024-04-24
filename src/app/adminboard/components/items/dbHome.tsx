@@ -38,6 +38,7 @@ const HomeContent: React.FC = () => {
             taskName: task.taskName,
             context: task.context,
             message: task.message,
+            dateClosed: task.dateClosed,
             assignor: {
               username: task.assignor.username,
               role: task.assignor.role,
@@ -50,14 +51,15 @@ const HomeContent: React.FC = () => {
               id: task.document.documentId,
               title: task.document.documentName,
               content: '', // Assuming there's no direct mapping for this from your response
-              translatedContent: task.document.documentTranslated,
+              documentMachine: task.document.documentMachine,
               timestamp: '', // Assuming there's no direct mapping for this from your response
               dateCreated: task.document.dateCreated,
+              translatedContent:task.document.documentTranslated,
               documentStyle: task.document.documentStyle,
-              deadline: '', // Assuming there's no direct mapping for this from your response
+              deadline: task.document.deadline, // Assuming there's no direct mapping for this from your response
               status: task.document.status,
             },
-            completed: task.status === 1, // Adjust according to your status logic
+            status: task.status === 1, // Adjust according to your status logic
           }));
           setTasks(formattedTasks);
         } else {
@@ -135,7 +137,7 @@ const HomeContent: React.FC = () => {
                     onClick={() => selectTask(task)}
                     style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', marginBottom: '20px' }}
                     title={<Text strong style={{ color: '#1890ff' }}>{task.name}</Text>}
-                    extra={<Tag color={getStatusColor(task.completed)} icon={getStatusIcon(task.completed)}>{task.completed ? 'Completed' : 'In-Progress'}</Tag>}
+                    extra={<Tag color={getStatusColor(task.status)} icon={getStatusIcon(task.status)}>{task.status ? 'Completed' : 'In-Progress'}</Tag>}
                   >
                     <Text style={{ color: '#666' }}>{task.message}</Text>
                     <Divider style={{ margin: '12px 0' }} />

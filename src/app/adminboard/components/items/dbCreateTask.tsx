@@ -91,6 +91,8 @@ const CreateTaskPage: React.FC = () => {
               documentName: values.title,
               documentTranslated: docStyle,
               documentStyle: docStyle,
+              dateClosed: values.deadline.toISOString().slice(0, 19).replace('T', ' '),
+              deadline:values.deadline.toISOString().slice(0, 19).replace('T', ' '),
               language: 'en',
               wordCount: cleanedText.split(' ').length,
             });
@@ -115,6 +117,7 @@ const CreateTaskPage: React.FC = () => {
       console.log('Validation failed:', error);
     });
   };
+  
 
 
   const handleConfirmTask = async () => {
