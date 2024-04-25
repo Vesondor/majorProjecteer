@@ -29,7 +29,7 @@ const Logo = ({ src }: { src?: string }) => {
   useEffect(() => setMounted(true), []);
 
   const resolvedLogo =
-    mounted && (theme === "dark" || resolvedTheme === "dark")
+    mounted && (theme === "light" || resolvedTheme === "light")
       ? logo_darkmode
       : logo;
   const logoPath = src ? src : resolvedLogo;
@@ -46,7 +46,8 @@ const Logo = ({ src }: { src?: string }) => {
           style={{
             height: logo_height.replace("px", "") + "px",
             width: logo_width.replace("px", "") + "px",
-            borderRadius: "15px"
+            borderRadius: "15px",
+            color: "white"
           }}
         />
       ) : logo_text ? (

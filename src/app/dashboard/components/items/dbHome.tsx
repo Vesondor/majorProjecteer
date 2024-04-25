@@ -140,6 +140,12 @@ const HomeContent: React.FC = () => {
     const filteredCompletedTasks = completedTasks.filter(task =>
         task.taskName ? task.taskName.toLowerCase().includes(searchQuery.toLowerCase()) : false
     );
+
+
+    const filteredTasks = tasks.filter(task =>
+        task.taskName ? task.taskName.toLowerCase().includes(searchQuery.toLowerCase()) : false
+    );
+
     const renderTaskCard = (task: Task) => (
         <Col key={task.id} xs={24} sm={12} md={12} lg={6}>
             <div>
@@ -247,10 +253,10 @@ const HomeContent: React.FC = () => {
                     </Title>
                     {viewMode === 'card' ? (
                         <Row gutter={[16, 16]}>
-                            {tasks.map(task => renderTaskCard(task))}
+                            {filteredTasks.map(task => renderTaskCard(task))}
                         </Row>
                     ) : (
-                        <List dataSource={tasks} renderItem={renderTaskList} />
+                        <List dataSource={filteredTasks} renderItem={renderTaskList} />
                     )}
                 </div>
 
